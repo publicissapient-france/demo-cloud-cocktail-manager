@@ -28,7 +28,7 @@
         <syslogHost>${papertrail.host}</syslogHost>
         <port>${papertrail.port}</port>
         <facility>USER</facility>
-        <suffixPattern>[%thread] %logger{36} - %msg</suffixPattern>
+        <suffixPattern>[%thread] %logger{36} - %msg %ex{0}</suffixPattern>
     </appender>
 
        
