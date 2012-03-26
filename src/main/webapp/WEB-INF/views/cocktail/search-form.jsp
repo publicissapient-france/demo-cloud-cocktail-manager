@@ -12,7 +12,6 @@
 	$(document).ready(function() {
 		$("input#cocktailName").autocomplete({
 			minLength : 2,
-			// source : [ "vodka", "orange juice", "cranberry juice" ],
 			source : "${pageContext.request.contextPath}/cocktail/completion"
 		});
 	});
