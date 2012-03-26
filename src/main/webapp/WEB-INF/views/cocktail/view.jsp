@@ -9,15 +9,14 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript">
-
+	
 </script>
 </head>
 <body>
     <div>
         <h2>${cocktail.name}</h2>
-        <p>
+        <p />
         <pre>${cocktail.instructions}</pre>
-        </p>
         <c:if test="${not empty cocktail.photoUrl}">
             <img src="${cocktail.photoUrl}" />
         </c:if>

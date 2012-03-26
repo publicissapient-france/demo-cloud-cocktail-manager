@@ -1,3 +1,7 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ page session="false"%>
 <html>
 <head>
 <title>Cocktails Search</title>
@@ -15,16 +19,14 @@
 </script>
 </head>
 <body>
-    <form:form id="form" action="${pageContext.request.contextPath}/cocktail/search" method="get">
-
-        <form id="searchCocktailByName" action="cocktail/search">
-            <fieldset>
-                <legend>Search Cocktail by Name</legend>
-                <label for="cocktailName">Name</label><input id="cocktailName" name="cocktailName" type="text" class="ui-autocomplete-input" />
-                <p />
-                <input type="submit" value="Search">
-            </fieldset>
-        </form:form>
+    <form:form id="searchCocktailByName" action="${pageContext.request.contextPath}/cocktail/search" method="get">
+        <fieldset>
+            <legend>Search Cocktail by Name</legend>
+            <label for="cocktailName">Name</label><input id="cocktailName" name="cocktailName" type="text" class="ui-autocomplete-input" />
+            <p />
+            <input type="submit" value="Search">
+        </fieldset>
+    </form:form>
 </body>
 </html>
 
