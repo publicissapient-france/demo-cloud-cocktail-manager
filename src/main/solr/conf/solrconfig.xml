@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with 
-    this work for additional information regarding copyright ownership. The ASF licenses this file to You under the Apache License, Version 2.0 (the 
-    "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
-    Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT 
-    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations 
-    under the License. -->
+<!-- -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License"); -->
+<!-- you may not use this file except in compliance with the License. -->
+<!-- You may obtain a copy of the License at -->
+<!-- -->
+<!-- http://www.apache.org/licenses/LICENSE-2.0 -->
+<!-- -->
+<!-- Unless required by applicable law or agreed to in writing, software -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS, -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and -->
+<!-- limitations under the License. -->
+<!-- -->
 
-<!-- For more details about configurations options that may appear in this file, see http://wiki.apache.org/solr/SolrConfigXml. -->
+<!-- see http://wiki.apache.org/solr/SolrConfigXml. -->
 <config>
 
     <abortOnConfigurationError>${solr.abortOnConfigurationError:true}</abortOnConfigurationError>
-
     <luceneMatchVersion>LUCENE_35</luceneMatchVersion>
-
     <dataDir>${solr.data.dir:}</dataDir>
-
     <directoryFactory name="DirectoryFactory" class="${solr.directoryFactory:solr.StandardDirectoryFactory}" />
 
     <indexDefaults>
-
         <useCompoundFile>false</useCompoundFile>
         <mergeFactor>10</mergeFactor>
         <ramBufferSizeMB>32</ramBufferSizeMB>
@@ -28,11 +31,9 @@
     </indexDefaults>
 
     <mainIndex>
-
         <useCompoundFile>false</useCompoundFile>
         <ramBufferSizeMB>32</ramBufferSizeMB>
         <mergeFactor>10</mergeFactor>
-
         <unlockOnStartup>false</unlockOnStartup>
         <reopenReaders>true</reopenReaders>
         <deletionPolicy class="solr.SolrDeletionPolicy">
@@ -40,7 +41,6 @@
             <str name="maxOptimizedCommitsToKeep">0</str>
         </deletionPolicy>
         <infoStream file="INFOSTREAM.txt">false</infoStream>
-
     </mainIndex>
 
     <jmx />
@@ -51,53 +51,40 @@
 
     <query>
         <maxBooleanClauses>1024</maxBooleanClauses>
+
         <filterCache class="solr.FastLRUCache" size="512" initialSize="512" autowarmCount="0" />
-
         <queryResultCache class="solr.LRUCache" size="512" initialSize="512" autowarmCount="0" />
-
         <documentCache class="solr.LRUCache" size="512" initialSize="512" autowarmCount="0" />
-
 
         <enableLazyFieldLoading>true</enableLazyFieldLoading>
         <queryResultWindowSize>20</queryResultWindowSize>
         <queryResultMaxDocsCached>200</queryResultMaxDocsCached>
-
         <useColdSearcher>false</useColdSearcher>
-
         <maxWarmingSearchers>2</maxWarmingSearchers>
-
     </query>
 
 
     <requestDispatcher handleSelect="true">
         <requestParsers enableRemoteStreaming="true" multipartUploadLimitInKB="2048000" />
         <httpCaching never304="true" />
-
     </requestDispatcher>
 
     <requestHandler name="search" class="solr.SearchHandler" default="true">
-
         <lst name="defaults">
             <str name="echoParams">explicit</str>
             <int name="rows">10</int>
         </lst>
     </requestHandler>
 
-    <requestHandler name="/update" class="solr.XmlUpdateRequestHandler">
-    </requestHandler>
+    <requestHandler name="/update" class="solr.XmlUpdateRequestHandler" />
     <requestHandler name="/update/javabin" class="solr.BinaryUpdateRequestHandler" />
-
     <requestHandler name="/update/csv" class="solr.CSVRequestHandler" startup="lazy" />
-
     <requestHandler name="/update/json" class="solr.JsonUpdateRequestHandler" startup="lazy" />
-
-
     <requestHandler name="/update/extract" startup="lazy" class="solr.extraction.ExtractingRequestHandler">
         <lst name="defaults">
             <str name="fmap.content">text</str>
             <str name="lowernames">true</str>
             <str name="uprefix">ignored_</str>
-
             <!-- capture link hrefs but ignore div attributes -->
             <str name="captureAttr">true</str>
             <str name="fmap.a">links</str>
@@ -107,15 +94,10 @@
 
     <!-- XSLT Update Request Handler Transforms incoming XML with stylesheet identified by tr= -->
     <requestHandler name="/update/xslt" startup="lazy" class="solr.XsltUpdateRequestHandler" />
-
-
     <requestHandler name="/analysis/field" startup="lazy" class="solr.FieldAnalysisRequestHandler" />
-
     <requestHandler name="/analysis/document" class="solr.DocumentAnalysisRequestHandler" startup="lazy" />
 
-    <!-- Admin Handlers Admin Handlers - This will register all the standard admin RequestHandlers. -->
     <requestHandler name="/admin/" class="solr.admin.AdminHandlers" />
-    <!-- ping/healthcheck -->
     <requestHandler name="/admin/ping" class="solr.PingRequestHandler">
         <lst name="invariants">
             <str name="qt">search</str>
@@ -125,14 +107,12 @@
             <str name="echoParams">all</str>
         </lst>
     </requestHandler>
-
     <requestHandler name="/debug/dump" class="solr.DumpRequestHandler">
         <lst name="defaults">
             <str name="echoParams">explicit</str>
             <str name="echoHandler">true</str>
         </lst>
     </requestHandler>
-
 
     <searchComponent name="suggest" class="solr.SpellCheckComponent">
         <lst name="spellchecker">
@@ -154,20 +134,8 @@
         </arr>
     </requestHandler>
 
-    <queryResponseWriter name="json" class="solr.JSONResponseWriter">
-        <!-- For the purposes of the tutorial, JSON responses are written as plain text so that they are easy to read in *any* browser. If you 
-            expect a MIME type of "application/json" just remove this override. -->
-        <str name="content-type">text/plain; charset=UTF-8</str>
-    </queryResponseWriter>
+    <queryResponseWriter name="json" class="solr.JSONResponseWriter" />
 
-    <!-- Custom response writers can be declared as needed... -->
-    <!-- The solr.velocity.enabled flag is used by Solr's test cases so that this response writer is not loaded (causing an error if contrib/velocity 
-        has not been built fully) -->
-    <queryResponseWriter name="velocity" class="solr.VelocityResponseWriter" enable="${solr.velocity.enabled:true}" />
-
-
-    <!-- XSLT response writer transforms the XML output by any xslt file found in Solr's conf/xslt directory. Changes to xslt files are checked 
-        for every xsltCacheLifetimeSeconds. -->
     <queryResponseWriter name="xslt" class="solr.XSLTResponseWriter">
         <int name="xsltCacheLifetimeSeconds">5</int>
     </queryResponseWriter>
@@ -178,5 +146,4 @@
         <defaultQuery>*:*</defaultQuery>
 
     </admin>
-
 </config>
