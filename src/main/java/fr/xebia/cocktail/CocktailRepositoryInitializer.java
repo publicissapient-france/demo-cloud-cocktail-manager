@@ -15,24 +15,35 @@
  */
 package fr.xebia.cocktail;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.bson.types.ObjectId;
-import org.springframework.stereotype.Repository;
+public class CocktailRepositoryInitializer {
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.MapMaker;
+    private final static Logger logger = LoggerFactory.getLogger(CocktailRepositoryInitializer.class);
 
-public class InMemoryCocktailDao implements CocktailRepository {
+    public static void main(String[] args) throws Exception {
+        try {
+            new CocktailRepositoryInitializer().initializeRepository();
+        } catch (Exception e) {
+            logger.error("Exception initializing the repository", e);
+            throw e;
+        }
+    }
 
-    private Map<String, Cocktail> cocktails = new MapMaker().concurrencyLevel(1).makeMap();
+    public void initializeRepository() throws Exception {
 
-    public InMemoryCocktailDao() {
+        CocktailRepository cocktailRepository = new CocktailRepository( //
+                "mongodb://localhost:27017/devoxxfr-demo", //
+                "http://localhost:8983/solr/");
+        cocktailRepository.purgeRepository();
+
+        cocktailRepository.insert(buildLongIslandCocktail());
+        cocktailRepository.insert(buildSexOnTheBeachCocktail());
+    }
+
+    protected Cocktail buildSexOnTheBeachCocktail() {
         Cocktail sexOnTheBeach = new Cocktail()
-                .withObjectId(ObjectId.get())
                 .withName("Sex On The Beach")
                 .withIngredient("1 shot", "vodka")
                 .withIngredient("1 shot", "peach schnapps (archers)")
@@ -44,11 +55,11 @@ public class InMemoryCocktailDao implements CocktailRepository {
                                 + "\n" //
                                 + "Serve with an ubrella and a mixer stick and a fancy straw and an orange slice on side of "
                                 + "glass this one is gorgeous can't believe you don't already have it on here!");
+        return sexOnTheBeach;
+    }
 
-        update(sexOnTheBeach);
-
+    protected Cocktail buildLongIslandCocktail() {
         Cocktail longIslandIcedTea = new Cocktail()
-                .withObjectId(ObjectId.get())
                 .withName("Long Island Iced tea")
                 .withIngredient("1 Measure", "vodka")
                 .withIngredient("1 Measure", "gin")
@@ -61,47 +72,6 @@ public class InMemoryCocktailDao implements CocktailRepository {
                         "In a tall glass , add ice and all the ingredients and stir well. It should have the appearance of cloudy tea. Top with a piece of lemon\n"
                                 + "\n"
                                 + "Very yummy & very very decieving. It will get you hammered after only about 2 so drink with caution");
-
-        ;
-        update(longIslandIcedTea);
-    }
-
-    @Override
-    public boolean delete(Cocktail cocktail) {
-        return cocktails.remove(cocktail).getId() != null;
-    }
-    
-    
-    @Override
-    public void update(Cocktail cocktail) {
-        cocktails.put(cocktail.getId(), cocktail);
-    }
-
-    @Override
-    public void insert(Cocktail cocktail) {
-        Preconditions.checkArgument(cocktail.getId() == null, "Given id must be null in %s", cocktail);
-        cocktail.setObjectId(ObjectId.get());
-        cocktails.put(cocktail.getId(), cocktail);
-    }
-
-    @Override
-    public Cocktail get(String id) {
-        return cocktails.get(id);
-    }
-
-    @Override
-    public Collection<Cocktail> getAll() {
-        return this.cocktails.values();
-    }
-    @Override
-    public void purgeRepository() {
-        this.cocktails.clear();
-        
-    }
-    
-    @Override
-    public List<String> autocompleteCocktailNameWords(String query) {
-        // TODO
-        return Collections.emptyList();
+        return longIslandIcedTea;
     }
 }

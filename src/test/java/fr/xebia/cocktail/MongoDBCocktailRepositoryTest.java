@@ -27,11 +27,12 @@ import org.junit.Test;
 import com.mongodb.DBObject;
 
 public class MongoDBCocktailRepositoryTest {
-    static private MongoDBCocktailRepository cocktailRepository;
+    
+    static private CocktailRepository cocktailRepository;
 
     @BeforeClass
     public static void before() throws Exception {
-        cocktailRepository = new MongoDBCocktailRepository("mongodb://localhost:27017/devoxxfr-demo", "http://localhost:8983/solr/");
+        cocktailRepository = new CocktailRepository("mongodb://localhost:27017/devoxxfr-demo", "http://localhost:8983/solr/");
     }
 
     @AfterClass
