@@ -18,8 +18,18 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
-
-</head>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("input#searchCocktailByName").autocomplete({
+            minLength : 2,
+            source : "${pageContext.request.contextPath}/cocktail/suggest/name"
+        });
+        $("input#searchCocktailByIngredient").autocomplete({
+            minLength : 2,
+            source : "${pageContext.request.contextPath}/cocktail/suggest/ingredient"
+        });
+    });
+</script>
 <body>
     <div class="navbar">
         <div class="navbar-inner">
@@ -30,7 +40,9 @@
                     <li><a href="${pageContext.request.contextPath}/cocktail/">Cocktails</a></li>
                 </ul>
                 <form class="navbar-search pull-left">
-                    <input id="searchCocktail" name="searchCocktail" type="text" class="search-query" placeholder="Search cocktails">
+                    <input id="searchCocktailByName" name="searchCocktailByName" type="text" class="search-query"
+                        placeholder="Search by name"> <input id="searchCocktailByIngredient" name="searchCocktailByIngredient"
+                        type="text" class="search-query" placeholder="Search by ingredient">
                 </form>
             </div>
         </div>

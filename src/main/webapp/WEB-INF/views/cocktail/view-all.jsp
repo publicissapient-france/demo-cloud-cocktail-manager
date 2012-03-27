@@ -21,12 +21,16 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
-		$("input#searchCocktail").autocomplete({
-			minLength : 2,
-			source : "${pageContext.request.contextPath}/cocktail/completion"
-		});
-	});
+    $(document).ready(function() {
+        $("input#searchCocktailByName").autocomplete({
+            minLength : 2,
+            source : "${pageContext.request.contextPath}/cocktail/suggest/name"
+        });
+        $("input#searchCocktailByIngredient").autocomplete({
+            minLength : 2,
+            source : "${pageContext.request.contextPath}/cocktail/suggest/ingredient"
+        });
+    });
 </script>
 </head>
 <body>
@@ -37,10 +41,12 @@
                 <a class="brand" href="${pageContext.request.contextPath}/">Cocktail Manager</a>
                 <ul class="nav">
                     <li><a href="${pageContext.request.contextPath}/">Home</a></li>
-                    <li class="active"><a href="#">Cocktails</a></li>
+                    <li class="active"><a href="${pageContext.request.contextPath}/cocktail/">Cocktails</a></li>
                 </ul>
                 <form class="navbar-search pull-left">
-                    <input id="searchCocktail" name="searchCocktail" type="text" class="search-query" placeholder="Search cocktails">
+                    <input id="searchCocktailByName" name="searchCocktailByName" type="text" class="search-query"
+                        placeholder="Search by name"> <input id="searchCocktailByIngredient" name="searchCocktailByIngredient"
+                        type="text" class="search-query" placeholder="Search by ingredient">
                 </form>
             </div>
         </div>

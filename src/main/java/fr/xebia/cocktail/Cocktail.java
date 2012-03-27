@@ -20,7 +20,6 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import org.apache.solr.client.solrj.beans.Field;
 import org.bson.types.ObjectId;
 
 import com.google.common.base.Function;
@@ -41,13 +40,17 @@ public class Cocktail implements Comparable<Cocktail> {
 
     private String instructions;
 
-    @Field("name")
     @Nonnull
     private String name;
 
     private ObjectId objectId;
 
     private String photoUrl;
+
+    /**
+     * 
+     */
+    private String sourceUrl;
 
     @Override
     public int compareTo(Cocktail other) {
@@ -73,7 +76,6 @@ public class Cocktail implements Comparable<Cocktail> {
         return objectId == null ? null : objectId.toStringMongod();
     }
 
-    @Field("ingredient")
     public Collection<String> getIngredientNames() {
         return Collections2.transform(this.ingredients, new Function<Ingredient, String>() {
             @Override
@@ -149,11 +151,6 @@ public class Cocktail implements Comparable<Cocktail> {
         return this;
     }
 
-    public Cocktail withObjectId(ObjectId objectId) {
-        setObjectId(objectId);
-        return this;
-    }
-
     public Cocktail withIngredient(String quantity, String name) {
         this.ingredients.add(new Ingredient(quantity, name));
         return this;
@@ -167,6 +164,30 @@ public class Cocktail implements Comparable<Cocktail> {
     public Cocktail withName(String name) {
         setName(name);
         return this;
+    }
+
+    public Cocktail withObjectId(ObjectId objectId) {
+        setObjectId(objectId);
+        return this;
+    }
+
+    public Cocktail withPhotoUrl(String photoUrl) {
+        setPhotoUrl(photoUrl);
+        return this;
+    }
+
+    public String getSourceUrl() {
+        return sourceUrl;
+    }
+
+    public void setSourceUrl(String sourceUrl) {
+        this.sourceUrl = sourceUrl;
+    }
+
+    public Cocktail withSourceUrl(String sourceUrl) {
+        setSourceUrl(sourceUrl);
+        return this;
+
     }
 
 }

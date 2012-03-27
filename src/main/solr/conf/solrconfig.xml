@@ -114,7 +114,7 @@
         </lst>
     </requestHandler>
 
-    <searchComponent name="suggest" class="solr.SpellCheckComponent">
+    <searchComponent name="suggestName" class="solr.SpellCheckComponent">
         <lst name="spellchecker">
             <str name="name">suggest</str>
             <str name="classname">org.apache.solr.spelling.suggest.Suggester</str>
@@ -123,16 +123,37 @@
             <str name="field">name</str>
         </lst>
     </searchComponent>
-    <requestHandler name="/suggest" class="solr.SearchHandler">
+    <requestHandler name="/suggest/name" class="solr.SearchHandler">
         <lst name="defaults">
             <str name="spellcheck">true</str>
             <str name="spellcheck.dictionary">suggest</str>
             <str name="spellcheck.count">10</str>
         </lst>
         <arr name="components">
-            <str>suggest</str>
+            <str>suggestName</str>
         </arr>
     </requestHandler>
+
+    <searchComponent name="suggestIngredient" class="solr.SpellCheckComponent">
+        <lst name="spellchecker">
+            <str name="name">suggest</str>
+            <str name="classname">org.apache.solr.spelling.suggest.Suggester</str>
+            <str name="lookupImpl">org.apache.solr.spelling.suggest.tst.TSTLookup</str>
+            <str name="buildOnCommit">true</str>
+            <str name="field">ingredient</str>
+        </lst>
+    </searchComponent>
+    <requestHandler name="/suggest/ingredient" class="solr.SearchHandler">
+        <lst name="defaults">
+            <str name="spellcheck">true</str>
+            <str name="spellcheck.dictionary">suggest</str>
+            <str name="spellcheck.count">10</str>
+        </lst>
+        <arr name="components">
+            <str>suggestIngredient</str>
+        </arr>
+    </requestHandler>
+
 
     <queryResponseWriter name="json" class="solr.JSONResponseWriter" />
 

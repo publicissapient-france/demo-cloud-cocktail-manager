@@ -50,6 +50,8 @@ public class CocktailRepositoryInitializer {
                 .withIngredient("200 ml", "orange juice")
                 .withIngredient("200 ml", "cranberry juice")
                 .withIngredient("2 shots", "raspberry syrup")
+                .withPhotoUrl("http://xebia-cocktail.s3-website-us-east-1.amazonaws.com/4703755392347885371.jpg")
+                .withSourceUrl("http://www.cocktailmaking.co.uk/displaycocktail.php/321-Sex-On-The-Beach")
                 .withInstructions(
                         "Add ice to glass pour in shot of vodka add peach shnapps mix with orange, cranberry and raspberry\n" //
                                 + "\n" //
@@ -68,6 +70,8 @@ public class CocktailRepositoryInitializer {
                 .withIngredient("1 Measure", "triple sec")
                 .withIngredient("3 measures", "orange juice")
                 .withIngredient("to topp up the glass", "coke")
+                .withPhotoUrl("http://xebia-cocktail.s3-website-us-east-1.amazonaws.com/6762530443361434570.jpg")
+                .withSourceUrl("http://www.cocktailmaking.co.uk/displaycocktail.php/1069-Long-Island-Iced-tea")
                 .withInstructions(
                         "In a tall glass , add ice and all the ingredients and stir well. It should have the appearance of cloudy tea. Top with a piece of lemon\n"
                                 + "\n"

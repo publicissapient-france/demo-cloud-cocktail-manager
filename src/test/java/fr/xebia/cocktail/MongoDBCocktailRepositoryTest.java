@@ -104,7 +104,7 @@ public class MongoDBCocktailRepositoryTest {
 
     @Test
     public void testAutoComplete() {
-        Collection<String> words = cocktailRepository.autocompleteCocktailNameWords("lon");
+        Collection<String> words = cocktailRepository.suggestCocktailNameWords("lon");
         assertArrayEquals(new String[] { "long" }, words.toArray());
     }
 }

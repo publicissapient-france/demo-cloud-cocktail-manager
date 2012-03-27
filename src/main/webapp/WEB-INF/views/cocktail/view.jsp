@@ -22,12 +22,16 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
-		$("input#searchCocktail").autocomplete({
-			minLength : 2,
-			source : "${pageContext.request.contextPath}/cocktail/completion"
-		});
-	});
+    $(document).ready(function() {
+        $("input#searchCocktailByName").autocomplete({
+            minLength : 2,
+            source : "${pageContext.request.contextPath}/cocktail/suggest/name"
+        });
+        $("input#searchCocktailByIngredient").autocomplete({
+            minLength : 2,
+            source : "${pageContext.request.contextPath}/cocktail/suggest/ingredient"
+        });
+    });
 </script>
 </head>
 <body>
@@ -38,44 +42,60 @@
                 <a class="brand" href="${pageContext.request.contextPath}/">Cocktail Manager</a>
                 <ul class="nav">
                     <li><a href="${pageContext.request.contextPath}/">Home</a></li>
-                    <li class="active"><a href="#">Cocktails</a></li>
+                    <li class="active"><a href="${pageContext.request.contextPath}/cocktail/">Cocktails</a></li>
                 </ul>
                 <form class="navbar-search pull-left">
-                    <input id="searchCocktail" name="searchCocktail" type="text" class="search-query" placeholder="Search cocktails">
+                    <input id="searchCocktailByName" name="searchCocktailByName" type="text" class="search-query"
+                        placeholder="Search by name"> <input id="searchCocktailByIngredient" name="searchCocktailByIngredient"
+                        type="text" class="search-query" placeholder="Search by ingredient">
                 </form>
             </div>
         </div>
     </div>
 
     <div class="container">
-        <div class="row">
-            <div class="span12">
-                <h2>${cocktail.name}</h2>
-            </div>
+        <div class="page-header">
+            <h1>${cocktail.name}</h1>
         </div>
+
         <div class="row">
             <div class="span2">
                 <c:if test="${not empty cocktail.photoUrl}">
                     <img src="${cocktail.photoUrl}" width="100" />
                 </c:if>
             </div>
-            <div class="span7">
-                <blockquote>${cocktail.instructionsAsHtml}</blockquote>
-                <div class="btn-group">
-                    <a href="${pageContext.request.contextPath}/cocktail/${cocktail.id}/edit-form" class="btn js-btn">Edit</a>
-                </div>
+            <div class="span4">
+                <h2>Instructions</h2>
+                <p>${cocktail.instructionsAsHtml}</p>
             </div>
-            <div class="span3">
+            <div class="span4">
+                <h2>Ingredients</h2>
+                <ul>
+                    <c:forEach items="${cocktail.ingredients}" var="ingredient">
+                        <li>${ingredient.quantity} ${ingredient.name}</li>
+                    </c:forEach>
+                </ul>
+            </div>
+            <div class="span2">
+                <h2>Mail a friend</h2>
                 <form:form id="sendByEmail" action="${pageContext.request.contextPath}/cocktail/${id}/mail" method="post"
                     modelAttribute="cocktail">
                     <fieldset>
-                        <legend>Send by email</legend>
-                        <input id="recipientEmail" name="recipientEmail" type="text" placeholder="Email" />
+                        <input id="recipientEmail" name="recipientEmail" type="text" placeholder="Email" class="span2" />
                     </fieldset>
                     <div class="btn-group">
                         <button type="submit" class="btn js-btn">Send</button>
                     </div>
                 </form:form>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="span12">
+                <div class="btn-group">
+                    <a href="${pageContext.request.contextPath}/cocktail/${cocktail.id}/edit-form" class="btn js-btn">Edit</a>
+                </div>
+                <em><a href="${cocktail.sourceUrl}" target="_blank">${cocktail.sourceUrl}</a></em>
             </div>
         </div>
     </div>

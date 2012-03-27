@@ -17,6 +17,7 @@ package fr.xebia.cocktail;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -31,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,10 +48,13 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
 
@@ -84,10 +89,18 @@ public class CocktailManager {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/cocktail/completion")
+    @RequestMapping(method = RequestMethod.GET, value = "/cocktail/suggest/name")
     @ResponseBody
-    public List<String> autoCompleteName(@RequestParam("term") String term) {
-        List<String> words = this.cocktailRepository.autocompleteCocktailNameWords(term);
+    public List<String> suggestCocktailNameWord(@RequestParam("term") String term) {
+        List<String> words = this.cocktailRepository.suggestCocktailNameWords(term);
+        logger.trace("autocomplete word for {}:{}", term, words);
+        return words;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/cocktail/suggest/ingredient")
+    @ResponseBody
+    public List<String> suggestCocktailIngredientWord(@RequestParam("term") String term) {
+        List<String> words = this.cocktailRepository.suggestCocktailIngredientWords(term);
         logger.trace("autocomplete word for {}:{}", term, words);
         return words;
     }
@@ -142,6 +155,16 @@ public class CocktailManager {
         }
 
         cocktail.setId(id);
+
+        // remove empty ingredients (caused by empty input fields in the GUI)
+        Collection<Ingredient> ingredients = Collections2.filter(cocktail.getIngredients(), new Predicate<Ingredient>() {
+            @Override
+            public boolean apply(Ingredient ingredient) {
+                return StringUtils.hasLength(ingredient.getName()) && StringUtils.hasLength(ingredient.getQuantity());
+            }
+        });
+
+        cocktail.setIngredients(Lists.newArrayList(ingredients));
         cocktailRepository.update(cocktail);
 
         return "redirect:/cocktail/{id}";

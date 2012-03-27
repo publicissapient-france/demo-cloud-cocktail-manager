@@ -109,6 +109,7 @@ public class CocktailRepository {
         cocktail.setName((String) cocktailAsDbObject.get("name"));
         cocktail.setInstructions((String) cocktailAsDbObject.get("instructions"));
         cocktail.setPhotoUrl((String) cocktailAsDbObject.get("photoUrl"));
+        cocktail.setSourceUrl((String) cocktailAsDbObject.get("sourceUrl"));
 
         @SuppressWarnings("unchecked")
         List<DBObject> ingredientsAsDbObjects = (List<DBObject>) cocktailAsDbObject.get("ingredients");
@@ -184,6 +185,7 @@ public class CocktailRepository {
         rootBuilder.add("name", cocktail.getName());
         rootBuilder.add("instructions", cocktail.getInstructions());
         rootBuilder.add("photoUrl", cocktail.getPhotoUrl());
+        rootBuilder.add("sourceUrl", cocktail.getSourceUrl());
 
         BasicDBList ingredients = new BasicDBList();
         rootBuilder.add("ingredients", ingredients);
@@ -225,7 +227,15 @@ public class CocktailRepository {
         }
     }
 
-    public List<String> autocompleteCocktailNameWords(String query) {
+    public List<String> suggestCocktailNameWords(String query) {
+        return suggestCocktailWord(query, "/suggest/name");
+    }
+
+    public List<String> suggestCocktailIngredientWords(String query) {
+        return suggestCocktailWord(query, "/suggest/ingredient");
+    }
+
+    private List<String> suggestCocktailWord(String query, String solrQueryType) {
         query = Strings.nullToEmpty(query);
         if (query.length() < 2) {
             return Collections.emptyList();
@@ -234,7 +244,7 @@ public class CocktailRepository {
         // escape special characters
         SolrQuery solrQuery = new SolrQuery();
         solrQuery.setQuery(query);
-        solrQuery.setQueryType("/suggest");
+        solrQuery.setQueryType(solrQueryType);
 
         List<String> words = Lists.newArrayList();
 
