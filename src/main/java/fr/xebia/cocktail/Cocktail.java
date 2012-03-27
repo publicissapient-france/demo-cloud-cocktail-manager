@@ -25,6 +25,7 @@ import org.bson.types.ObjectId;
 
 import com.google.common.base.Function;
 import com.google.common.base.Objects;
+import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
@@ -90,6 +91,10 @@ public class Cocktail implements Comparable<Cocktail> {
         return instructions;
     }
 
+    public String getInstructionsAsHtml() {
+        return Strings.nullToEmpty(instructions).replace("\n", "<br />\n");
+    }
+
     public String getName() {
         return name;
     }
@@ -143,6 +148,7 @@ public class Cocktail implements Comparable<Cocktail> {
         setId(id);
         return this;
     }
+
     public Cocktail withObjectId(ObjectId objectId) {
         setObjectId(objectId);
         return this;

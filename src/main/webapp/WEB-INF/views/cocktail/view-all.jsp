@@ -17,23 +17,55 @@
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/base/jquery-ui.css" rel="Stylesheet" type="text/css" />
 
 <!-- Le javascript -->
-<script src="${pageContext.request.contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("input#searchCocktail").autocomplete({
+			minLength : 2,
+			source : "${pageContext.request.contextPath}/cocktail/completion"
+		});
+	});
+</script>
 </head>
 <body>
-    <div>
-        <h2>Coktails</h2>
-        <table>
-            <c:forEach items="${cocktails}" var="cocktail">
-                <tr>
-                    <td>&nbsp;<c:if test="${not empty cocktail.photoUrl}">
-                            <img src="${cocktail.photoUrl}" />
-                        </c:if></td>
-                    <td><a href="${pageContext.request.contextPath}/cocktail/${cocktail.id}">${cocktail.name}</a></td>
-                </tr>
-            </c:forEach>
-        </table>
+
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="brand" href="${pageContext.request.contextPath}/">Cocktail Manager</a>
+                <ul class="nav">
+                    <li><a href="${pageContext.request.contextPath}/">Home</a></li>
+                    <li class="active"><a href="#">Cocktails</a></li>
+                </ul>
+                <form class="navbar-search pull-left">
+                    <input id="searchCocktail" name="searchCocktail" type="text" class="search-query" placeholder="Search cocktails">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <c:forEach items="${cocktails}" var="cocktail">
+            <div class="row">
+                <div class="span1">
+                    &nbsp;
+                    <c:if test="${not empty cocktail.photoUrl}">
+                        <img src="${cocktail.photoUrl}" width="50" />
+                    </c:if>
+                </div>
+                <div class="span11">
+                    <a href="${pageContext.request.contextPath}/cocktail/${cocktail.id}"><h2>${cocktail.name}</h2></a> <br />
+                    <blockquote>${cocktail.instructionsAsHtml}</blockquote>
+                </div>
+            </div>
+        </c:forEach>
+
+        <footer>
+            <p>&copy; Xebia 2012</p>
+        </footer>
+
     </div>
 </body>
 </html>

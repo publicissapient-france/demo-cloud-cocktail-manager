@@ -119,11 +119,6 @@ public class CocktailManager {
         return "cocktail/edit-form";
     }
 
-    @RequestMapping(value = "/cocktail/search-form", method = RequestMethod.GET)
-    public String displaySearchForm() {
-        return "cocktail/search-form";
-    }
-
     @RequestMapping(value = "/cocktail/{id}/mail", method = RequestMethod.POST)
     public String sendEmail(@PathVariable String id, @RequestParam("recipientEmail") String recipientEmail, HttpServletRequest request) {
         Cocktail cocktail = cocktailRepository.get(id);

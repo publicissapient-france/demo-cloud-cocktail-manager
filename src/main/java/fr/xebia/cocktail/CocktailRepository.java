@@ -108,6 +108,7 @@ public class CocktailRepository {
         cocktail.setObjectId((ObjectId) cocktailAsDbObject.get("_id"));
         cocktail.setName((String) cocktailAsDbObject.get("name"));
         cocktail.setInstructions((String) cocktailAsDbObject.get("instructions"));
+        cocktail.setPhotoUrl((String) cocktailAsDbObject.get("photoUrl"));
 
         @SuppressWarnings("unchecked")
         List<DBObject> ingredientsAsDbObjects = (List<DBObject>) cocktailAsDbObject.get("ingredients");

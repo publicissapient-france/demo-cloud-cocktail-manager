@@ -15,14 +15,28 @@
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/base/jquery-ui.css" rel="Stylesheet" type="text/css" />
 
 <!-- Le javascript -->
-<script src="${pageContext.request.contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
 
 </head>
 <body>
-    <div>
-        <h1>Cocktail Manager</h1>
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="brand" href="${pageContext.request.contextPath}/">Cocktail Manager</a>
+                <ul class="nav">
+                    <li class="active"><a href="${pageContext.request.contextPath}/">Home</a></li>
+                    <li><a href="${pageContext.request.contextPath}/cocktail/">Cocktails</a></li>
+                </ul>
+                <form class="navbar-search pull-left">
+                    <input id="searchCocktail" name="searchCocktail" type="text" class="search-query" placeholder="Search cocktails">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
         <ul>
             <li><a href="${pageContext.request.contextPath}/cocktail/create-form">Create Cocktail</a></li>
             <li><a href="${pageContext.request.contextPath}/cocktail/">Cocktails</a></li>
