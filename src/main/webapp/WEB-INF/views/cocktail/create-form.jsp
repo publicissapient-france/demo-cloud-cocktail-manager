@@ -1,11 +1,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ page session="false"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Coktail Manager</title>
+<title>Cocktail Manager / Create cocktail</title>
 <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
 <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -21,38 +22,121 @@
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
 <script type="text/javascript">
-    $(document).ready(function() {
-        $("input#searchCocktailByName").autocomplete({
-            minLength : 2,
-            source : "${pageContext.request.contextPath}/cocktail/suggest/name"
-        });
-        $("input#searchCocktailByIngredient").autocomplete({
-            minLength : 2,
-            source : "${pageContext.request.contextPath}/cocktail/suggest/ingredient"
-        });
-    });
+	$(document).ready(function() {
+		$("input#searchCocktailByName").autocomplete({
+			minLength : 2,
+			source : "${pageContext.request.contextPath}/cocktail/suggest/name"
+		});
+		$("input#searchCocktailByIngredient").autocomplete({
+			minLength : 2,
+			source : "${pageContext.request.contextPath}/cocktail/suggest/ingredient"
+		});
+		<c:forEach begin="1" end="${fn:length(cocktail.ingredients) + 3}" varStatus="loopStatus">
+		$("input#ingredients_${loopStatus.index}_name").autocomplete({
+			minLength : 2,
+			source : "${pageContext.request.contextPath}/cocktail/suggest/ingredient"
+		});
+		</c:forEach>
+	});
 </script>
 </head>
 <body>
-    <div>
-        <h2>Coktail</h2>
-        <form:form id="form" method="post" modelAttribute="cocktail" action="${pageContext.request.contextPath}/cocktail">
-            <fieldset>
-                <legend>Cocktail details</legend>
-                <form:label path="name">
-		  			Name <form:errors path="name" cssClass="error" />
-                </form:label>
-                <form:input path="name" />
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <a class="brand" href="${pageContext.request.contextPath}/">Cocktail Manager</a>
+                <ul class="nav">
+                    <li><a href="${pageContext.request.contextPath}/">Home</a></li>
+                    <li class="active"><a href="${pageContext.request.contextPath}/cocktail/">Cocktails</a></li>
+                </ul>
+                <form class="navbar-search pull-left">
+                    <input id="searchCocktailByName" name="searchCocktailByName" type="text" class="search-query"
+                        placeholder="Search by name"> <input id="searchCocktailByIngredient" name="searchCocktailByIngredient"
+                        type="text" class="search-query" placeholder="Search by ingredient">
+                </form>
+            </div>
+        </div>
+    </div>
 
-                <form:label path="instructions">
-		  			Instructions <form:errors path="instructions" cssClass="error" />
-                </form:label>
-                <form:textarea path="instructions" />
-            </fieldset>
-            <p>
-                <button type="submit">Submit</button>
-            </p>
-        </form:form>
+    <div class="container">
+        <div class="row">
+            <div class="span2">
+                <em>Save the cocktail before adding an image</em>
+            </div>
+            <form:form id="form" action="${pageContext.request.contextPath}/cocktail" method="post">
+                <div class="span10">
+                    <div class="row">
+                        <!-- DETAILS -->
+                        <div class="span4">
+                            <fieldset>
+                                <legend>Cocktail details</legend>
+                                <div class="control-group">
+                                    <label class="control-label" for="name">Name</label>
+                                    <div class="controls">
+                                        <input id="name" name="name" type="text" value="${cocktail.name}" class="span4">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="photoUrl">Photo URL</label>
+                                    <div class="controls">
+                                        <input id="photoUrl" name="photoUrl" type="text" value="${cocktail.photoUrl}" class="span4">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="sourceUrl">Source URL</label>
+                                    <div class="controls">
+                                        <input id="sourceUrl" name="sourceUrl" type="text" value="${cocktail.sourceUrl}" class="span4">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="sourceUrl">Instructions</label>
+                                    <div class="controls">
+                                        <textarea id="instructions" name="instructions" class="span4" rows="8">${cocktail.instructions}</textarea>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <!-- INGREDIENTS -->
+                        <div class="span6">
+                            <fieldset>
+                                <legend>Ingredients</legend>
+                                <c:forEach items="${cocktail.ingredients}" var="ingredient" varStatus="loopStatus">
+                                    <div class="control-group">
+                                        <div class="controls">
+                                            <input name="ingredients[${loopStatus.index}].quantity" value="${ingredient.quantity}"
+                                                value="${ingredient.quantity}" class="span2" /> <input
+                                                name="ingredients[${loopStatus.index}].name" id="ingredients_${loopStatus.index}_name"
+                                                value="${ingredient.name}" class="span2" />
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                                <c:forEach begin="1" end="3" varStatus="loopStatus">
+                                    <div class="control-group">
+                                        <div class="controls">
+                                            <input name="ingredients[${fn:length(cocktail.ingredients) + loopStatus.index}].quantity"
+                                                value="" class="span2" /> <input
+                                                name="ingredients[${fn:length(cocktail.ingredients) + loopStatus.index}].name"
+                                                id="ingredients_${fn:length(cocktail.ingredients) + loopStatus.index}_name" value=""
+                                                class="span2" />
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="span12">
+                            <div class="btn-group">
+                                <button type="submit" class="btn js-btn">Save</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </form:form>
+        </div>
     </div>
 </body>
 </html>
+
+

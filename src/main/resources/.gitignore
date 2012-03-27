@@ -3,3 +3,4 @@
 /papertrail.properties
 /mongodb.properties
 /solr.properties
+/environment.properties

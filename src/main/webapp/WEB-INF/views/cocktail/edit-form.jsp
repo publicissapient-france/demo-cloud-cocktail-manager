@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Cocktail Manager</title>
+<title>Cocktail Manager / ${cocktail.name}</title>
 <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
 <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -60,7 +60,7 @@
 
     <div class="container">
         <div class="row">
-            <div class="span2">
+            <div class="span3">
                 <form:form action="${pageContext.request.contextPath}/cocktail/${id}/photo" method="put" enctype="multipart/form-data">
                     <fieldset>
                         <legend>Photo</legend>
@@ -68,7 +68,7 @@
                             <img src="${cocktail.photoUrl}" width="100" />
                             <br />
                         </c:if>
-                        <input name="photo" type="file" />
+                        <input name="photo" type="file" class="btn js-btn" />
                     </fieldset>
                     <div class="btn-group">
                         <button type="submit" class="btn js-btn">Upload Photo</button>
@@ -76,7 +76,7 @@
                 </form:form>
             </div>
             <form:form id="form" action="${pageContext.request.contextPath}/cocktail/${id}" method="put">
-                <div class="span10">
+                <div class="span9">
                     <div class="row">
                         <!-- DETAILS -->
                         <div class="span4">
@@ -109,7 +109,7 @@
                             </fieldset>
                         </div>
                         <!-- INGREDIENTS -->
-                        <div class="span6">
+                        <div class="span5">
                             <fieldset>
                                 <legend>Ingredients</legend>
                                 <c:forEach items="${cocktail.ingredients}" var="ingredient" varStatus="loopStatus">
@@ -125,8 +125,8 @@
                                 <c:forEach begin="1" end="3" varStatus="loopStatus">
                                     <div class="control-group">
                                         <div class="controls">
-                                            <input name="ingredients[${fn:length(cocktail.ingredients) + loopStatus.index}].quantity" value=""
-                                                class="span2" /> <input
+                                            <input name="ingredients[${fn:length(cocktail.ingredients) + loopStatus.index}].quantity"
+                                                value="" class="span2" /> <input
                                                 name="ingredients[${fn:length(cocktail.ingredients) + loopStatus.index}].name"
                                                 id="ingredients_${fn:length(cocktail.ingredients) + loopStatus.index}_name" value=""
                                                 class="span2" />

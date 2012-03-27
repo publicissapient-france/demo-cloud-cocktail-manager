@@ -16,7 +16,7 @@
 <!-- -->
 <configuration scan="true" scanPeriod="30 seconds" debug="false">
 
-    <property resource="papertrail.properties" />
+    <property resource="environment.properties" />
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>

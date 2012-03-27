@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -42,30 +40,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.PropertiesCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
-import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Collections2;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.io.ByteStreams;
 
 @Controller
 public class CocktailManager {
-
-    private AmazonS3 amazonS3;
-
-    private String amazonS3BucketBaseUrl = "http://xebia-cocktail.s3-website-us-east-1.amazonaws.com/";
-
-    private String amazonS3BucketName = "xebia-cocktail";
 
     @Inject
     private CocktailRepository cocktailRepository;
@@ -75,35 +57,8 @@ public class CocktailManager {
     @Inject
     private MailService mailService;
 
-    private final Random random = new Random();
-
-    public CocktailManager() {
-        String credentialsFilePath = "AwsCredentials.properties";
-        InputStream credentialsAsStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(credentialsFilePath);
-        Preconditions.checkState(credentialsAsStream != null, "File '" + credentialsFilePath + "' NOT found in the classpath");
-        try {
-            AWSCredentials awsCredentials = new PropertiesCredentials(credentialsAsStream);
-            amazonS3 = new AmazonS3Client(awsCredentials);
-        } catch (IOException e) {
-            throw new IllegalStateException("Exception loading '" + credentialsFilePath + "'", e);
-        }
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/cocktail/suggest/name")
-    @ResponseBody
-    public List<String> suggestCocktailNameWord(@RequestParam("term") String term) {
-        List<String> words = this.cocktailRepository.suggestCocktailNameWords(term);
-        logger.trace("autocomplete word for {}:{}", term, words);
-        return words;
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/cocktail/suggest/ingredient")
-    @ResponseBody
-    public List<String> suggestCocktailIngredientWord(@RequestParam("term") String term) {
-        List<String> words = this.cocktailRepository.suggestCocktailIngredientWords(term);
-        logger.trace("autocomplete word for {}:{}", term, words);
-        return words;
-    }
+    @Inject
+    private FileStorageService fileStorageService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/cocktail")
     public String create(@Valid Cocktail cocktail, BindingResult result) {
@@ -148,6 +103,22 @@ public class CocktailManager {
         return "redirect:/cocktail/" + cocktail.getId();
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/cocktail/suggest/ingredient")
+    @ResponseBody
+    public List<String> suggestCocktailIngredientWord(@RequestParam("term") String term) {
+        List<String> words = this.cocktailRepository.suggestCocktailIngredientWords(term);
+        logger.trace("autocomplete word for {}:{}", term, words);
+        return words;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/cocktail/suggest/name")
+    @ResponseBody
+    public List<String> suggestCocktailNameWord(@RequestParam("term") String term) {
+        List<String> words = this.cocktailRepository.suggestCocktailNameWords(term);
+        logger.trace("autocomplete word for {}:{}", term, words);
+        return words;
+    }
+
     @RequestMapping(value = "/cocktail/{id}", method = RequestMethod.PUT)
     public String update(@PathVariable String id, @Valid Cocktail cocktail, BindingResult result) {
         if (result.hasErrors()) {
@@ -179,43 +150,27 @@ public class CocktailManager {
      */
     @RequestMapping(value = "/cocktail/{id}/photo", method = RequestMethod.POST)
     public String updatePhoto(@PathVariable String id, @RequestParam("photo") MultipartFile photo) {
-        final Map<String, String> permittedPhotoExtensionsWithContentType = Maps.newHashMapWithExpectedSize(4);
-        permittedPhotoExtensionsWithContentType.put("jpg", "image/jpeg");
-        permittedPhotoExtensionsWithContentType.put("jpeg", "image/jpeg");
-        permittedPhotoExtensionsWithContentType.put("png", "image/png");
-        permittedPhotoExtensionsWithContentType.put("gif", "image/gif");
 
-        String originalFilename = photo.getOriginalFilename();
-        if (photo.isEmpty()) {
-            logger.warn("photo", "Skip empty file '" + originalFilename + "'");
-        } else {
+        if (!photo.isEmpty()) {
             try {
-
-                String extension = Iterables.getLast(Splitter.on('.').split(originalFilename), null);
-                extension = Strings.nullToEmpty(extension).toLowerCase();
-                String contentType = permittedPhotoExtensionsWithContentType.get(extension);
+                String contentType = fileStorageService.findContentType(photo.getOriginalFilename());
                 if (contentType == null) {
-                    logger.warn("photo", "Skip file with unsupported extension '" + originalFilename + "'");
+                    logger.warn("photo", "Skip file with unsupported extension '" + photo.getOriginalFilename() + "'");
                 } else {
-                    String photoFileName = Math.abs(random.nextLong()) + "." + extension;
-                    String photoUrl;
 
-                    byte[] bytes = photo.getBytes();
+                    InputStream photoInputStream = photo.getInputStream();
+                    long photoSize = photo.getSize();
 
-                    // AMAZON S3
                     ObjectMetadata objectMetadata = new ObjectMetadata();
-                    objectMetadata.setContentLength(bytes.length);
+                    objectMetadata.setContentLength(photoSize);
                     objectMetadata.setContentType(contentType);
                     objectMetadata.setCacheControl("public, max-age=" + TimeUnit.SECONDS.convert(365, TimeUnit.DAYS));
-                    amazonS3.putObject(amazonS3BucketName, photoFileName, ByteStreams.newInputStreamSupplier(bytes).getInput(),
-                            objectMetadata);
-                    photoUrl = amazonS3BucketBaseUrl + photoFileName;
+                    String photoUrl = fileStorageService.storeFile(photoInputStream, objectMetadata);
 
                     Cocktail cocktail = cocktailRepository.get(id);
                     logger.info("Saved {}", photoUrl);
                     cocktail.setPhotoUrl(photoUrl);
                     cocktailRepository.update(cocktail);
-
                 }
 
             } catch (IOException e) {
