@@ -77,7 +77,11 @@ public class CocktailRepository {
             MalformedURLException {
         MongoURI databaseUri = new MongoURI(mongoUri);
         mongo = new Mongo(databaseUri);
+
         db = mongo.getDB(databaseUri.getDatabase());
+        if (!Strings.isNullOrEmpty(databaseUri.getUsername())) {
+            db.authenticate(databaseUri.getUsername(), databaseUri.getPassword());
+        }
         cocktails = db.getCollection("cocktails");
 
         solrServer = new CommonsHttpSolrServer(solrUri);

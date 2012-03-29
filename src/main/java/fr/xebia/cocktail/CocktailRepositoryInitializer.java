@@ -34,8 +34,8 @@ public class CocktailRepositoryInitializer {
     public void initializeRepository() throws Exception {
 
         CocktailRepository cocktailRepository = new CocktailRepository( //
-                "mongodb://localhost:27017/devoxxfr-demo", //
-                "http://localhost:8983/solr/");
+                "mongodb://devoxxfr-demo:W69NrfXwq@boone.mongohq.com:10085/devoxxfr-demo", //
+                "http://index.websolr.com/solr/7a5ae0d2d39");
         cocktailRepository.purgeRepository();
 
         cocktailRepository.insert(buildLongIslandCocktail());

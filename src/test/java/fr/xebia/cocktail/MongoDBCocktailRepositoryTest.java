@@ -22,12 +22,13 @@ import java.util.Collection;
 import org.bson.types.ObjectId;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.mongodb.DBObject;
 
 public class MongoDBCocktailRepositoryTest {
-    
+
     static private CocktailRepository cocktailRepository;
 
     @BeforeClass
@@ -40,6 +41,7 @@ public class MongoDBCocktailRepositoryTest {
         cocktailRepository.preDestroy();
     }
 
+    @Ignore
     @Test
     public void testInsertUpdateAndDelete() {
         Cocktail sexOnTheBeach = buildLongIslandCocktail();
@@ -54,7 +56,7 @@ public class MongoDBCocktailRepositoryTest {
     @Test
     public void testBsonMapping() {
 
-        Cocktail sexOnTheBeach = buildLongIslandCocktail();
+        Cocktail sexOnTheBeach = buildSexOnTheBeachCocktail();
         ObjectId objectId = ObjectId.get();
         sexOnTheBeach.setObjectId(objectId);
 
@@ -102,6 +104,7 @@ public class MongoDBCocktailRepositoryTest {
         return longIslandIcedTea;
     }
 
+    @Ignore
     @Test
     public void testAutoComplete() {
         Collection<String> words = cocktailRepository.suggestCocktailNameWords("lon");

@@ -16,26 +16,25 @@
 <!-- -->
 <configuration scan="true" scanPeriod="30 seconds" debug="false">
 
-    <property resource="environment.properties" />
+   <property resource="environment-localhost.properties" />
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %ex{0}%n</pattern>
-        </encoder>
-    </appender>
+   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+      <encoder>
+         <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg %ex{0}%n</pattern>
+      </encoder>
+   </appender>
 
-    <appender name="SYSLOG" class="ch.qos.logback.classic.net.SyslogAppender">
-        <syslogHost>${papertrail.host}</syslogHost>
-        <port>${papertrail.port}</port>
-        <facility>USER</facility>
-        <suffixPattern>[%thread] %logger{36} - %msg %ex{0}</suffixPattern>
-    </appender>
+   <appender name="SYSLOG" class="ch.qos.logback.classic.net.SyslogAppender">
+      <syslogHost>${papertrail.host}</syslogHost>
+      <port>${papertrail.port}</port>
+      <facility>USER</facility>
+      <suffixPattern>[%thread] %logger{36} - %msg %ex{0}</suffixPattern>
+   </appender>
 
-       
-    <logger name="audit" level="TRACE" />
+   <logger name="audit" level="TRACE" />
 
-    <root level="warn">
-        <appender-ref ref="STDOUT" />
-        <appender-ref ref="SYSLOG" />
-    </root>
+   <root level="warn">
+      <appender-ref ref="STDOUT" />
+      <appender-ref ref="SYSLOG" />
+   </root>
 </configuration>
