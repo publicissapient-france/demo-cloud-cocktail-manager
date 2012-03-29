@@ -17,6 +17,10 @@ package fr.xebia.cocktail;
 
 import com.google.common.base.Objects;
 
+/**
+ * 
+ * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
+ */
 public class Ingredient {
 
     public Ingredient() {

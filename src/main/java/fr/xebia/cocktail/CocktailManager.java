@@ -46,6 +46,10 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 
+/**
+ * 
+ * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
+ */
 @Controller
 public class CocktailManager {
 
@@ -58,7 +62,7 @@ public class CocktailManager {
     private MailService mailService;
 
     @Inject
-    private FileStorageService fileStorageService;
+    private AmazonS3FileStorageService fileStorageService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/cocktail")
     public String create(@Valid Cocktail cocktail, BindingResult result) {

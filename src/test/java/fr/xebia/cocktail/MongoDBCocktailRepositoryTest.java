@@ -27,6 +27,11 @@ import org.junit.Test;
 
 import com.mongodb.DBObject;
 
+/**
+ * 
+ * @author cyrilleleclerc
+ *
+ */
 public class MongoDBCocktailRepositoryTest {
 
     static private CocktailRepository cocktailRepository;

@@ -18,6 +18,10 @@ package fr.xebia.cocktail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
+ */
 public class CocktailRepositoryInitializer {
 
     private final static Logger logger = LoggerFactory.getLogger(CocktailRepositoryInitializer.class);

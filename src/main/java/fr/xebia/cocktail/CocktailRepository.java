@@ -55,6 +55,10 @@ import com.mongodb.MongoURI;
 import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 
+/**
+ * 
+ * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
+ */
 @Repository
 public class CocktailRepository {
 

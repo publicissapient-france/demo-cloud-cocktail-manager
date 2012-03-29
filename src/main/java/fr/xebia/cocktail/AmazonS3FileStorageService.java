@@ -20,8 +20,12 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 
+/**
+ * 
+ * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
+ */
 @Service
-public class FileStorageService {
+public class AmazonS3FileStorageService {
 
     private Map<String, String> contentTypeByFileExtension;
 
@@ -38,7 +42,7 @@ public class FileStorageService {
     private final Random random = new Random();
 
     @Inject
-    public FileStorageService(@Value("${aws.accessKey}") String awsAccessKey, @Value("${aws.secretKey}") String awsSecretKey) {
+    public AmazonS3FileStorageService(@Value("${aws.accessKey}") String awsAccessKey, @Value("${aws.secretKey}") String awsSecretKey) {
 
         amazonS3 = new AmazonS3Client(new BasicAWSCredentials(awsAccessKey, awsSecretKey));
 

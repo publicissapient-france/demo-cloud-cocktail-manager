@@ -34,6 +34,10 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.base.Strings;
 
+/**
+ * 
+ * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
+ */
 @Service
 public class MailService {
 
