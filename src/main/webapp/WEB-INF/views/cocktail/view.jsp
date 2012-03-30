@@ -1,3 +1,5 @@
+<%@page import="net.tanesha.recaptcha.ReCaptcha"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
@@ -36,7 +38,7 @@
         });
     });
 </script>
-<%@ include file="../analyticstracking.jspf" %>
+<%@ include file="../analyticstracking.jspf"%>
 </head>
 <body>
 
@@ -61,7 +63,10 @@
 
     <div class="container">
         <div class="page-header">
-            <h1>${cocktail.name}</h1>
+            <h1>
+                ${cocktail.name} <a href="${pageContext.request.contextPath}/cocktail/${cocktail.id}/edit-form" class="btn js-btn"><i
+                    class="icon-edit"></i> Edit</a>
+            </h1>
         </div>
 
         <div class="row">
@@ -90,18 +95,39 @@
                         <input id="recipientEmail" name="recipientEmail" type="text" placeholder="Email" class="span2" />
                     </fieldset>
                     <div class="btn-group">
-                        <button type="submit" class="btn js-btn">Send</button>
+                        <button type="submit" class="btn js-btn">
+                            <i class="icon-envelope"></i> Send
+                        </button>
                     </div>
                 </form:form>
             </div>
 
         </div>
         <div class="row">
-            <div class="span12">
-                <div class="btn-group">
-                    <a href="${pageContext.request.contextPath}/cocktail/${cocktail.id}/edit-form" class="btn js-btn">Edit</a>
-                </div>
+            <div class="span8 offset2">
                 <em><a href="${cocktail.sourceUrl}" target="_blank">${cocktail.sourceUrl}</a></em>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span8 offset2">
+                <hr />
+                <h4>Comments</h4>
+                <c:forEach items="${cocktail.comments}" var="comment">
+                    <em>"${comment}"</em>
+                    <br />
+                </c:forEach>
+                <form id="comment" action="${pageContext.request.contextPath}/cocktail/${id}/comment" method="post" class="form-inline">
+                    <fieldset>
+                        <%
+                            ReCaptcha c = WebApplicationContextUtils.getRequiredWebApplicationContext(application).getBean(ReCaptcha.class);
+                            out.print(c.createRecaptchaHtml(null, null));
+                        %>
+                        <input id="comment" name="comment" type="text" placeholder="Add a comment..." />
+                        <button type="submit" class="btn js-btn">
+                            <i class="icon-comment"></i> Comment
+                        </button>
+                    </fieldset>
+                </form>
             </div>
         </div>
     </div>

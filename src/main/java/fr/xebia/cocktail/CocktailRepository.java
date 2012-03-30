@@ -128,9 +128,10 @@ public class CocktailRepository {
 
         @SuppressWarnings("unchecked")
         List<String> comments = (List<String>) cocktailAsDbObject.get("comments");
-        cocktail.setComments(comments);
-        
-        
+        if (comments != null) {
+            cocktail.getComments().addAll(comments);
+        }
+
         return cocktail;
     }
 
@@ -209,7 +210,7 @@ public class CocktailRepository {
         BasicDBList comments = new BasicDBList();
         rootBuilder.add("comments", comments);
         comments.addAll(cocktail.getComments());
-        
+
         DBObject root = rootBuilder.get();
         return root;
     }

@@ -16,6 +16,7 @@
 package fr.xebia.cocktail;
 
 import java.util.Collection;
+import java.util.Deque;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -52,7 +53,7 @@ public class Cocktail implements Comparable<Cocktail> {
      */
     private String sourceUrl;
 
-    private List<String> comments = Lists.newArrayList();
+    private Deque<String> comments = Lists.newLinkedList();
 
     @Override
     public int compareTo(Cocktail other) {
@@ -74,7 +75,7 @@ public class Cocktail implements Comparable<Cocktail> {
         return Objects.equal(this.objectId, other.objectId);
     }
 
-    public List<String> getComments() {
+    public Deque<String> getComments() {
         return comments;
     }
 
@@ -124,7 +125,7 @@ public class Cocktail implements Comparable<Cocktail> {
         return Objects.hashCode(this.objectId);
     }
 
-    public void setComments(List<String> comments) {
+    public void setComments(Deque<String> comments) {
         this.comments = comments;
     }
 
@@ -164,8 +165,8 @@ public class Cocktail implements Comparable<Cocktail> {
                 .toString();
     }
 
-    public Cocktail withComment(String comment) {
-        getComments().add(comment);
+    public Cocktail addComment(String comment) {
+        getComments().addFirst(comment);
         return this;
     }
 

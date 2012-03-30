@@ -138,6 +138,13 @@
          <version>2.0.1</version>
       </dependency>
 
+      <!-- ReCaptcha -->
+      <dependency>
+         <groupId>net.tanesha.recaptcha4j</groupId>
+         <artifactId>recaptcha4j</artifactId>
+         <version>0.0.7</version>
+      </dependency>
+
       <!-- Servlet -->
       <dependency>
          <groupId>javax.servlet</groupId>

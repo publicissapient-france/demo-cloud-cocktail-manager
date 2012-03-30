@@ -90,8 +90,8 @@ public class MongoDBCocktailRepositoryTest {
                                 + "\n" //
                                 + "Serve with an ubrella and a mixer stick and a fancy straw and an orange slice on side of "
                                 + "glass this one is gorgeous can't believe you don't already have it on here!") //
-                .withComment("I like it!!") //
-                .withComment("Perfect balance between orange and vodka.");
+                .addComment("I like it!!") //
+                .addComment("Perfect balance between orange and vodka.");
         return sexOnTheBeach;
     }
 
@@ -109,7 +109,7 @@ public class MongoDBCocktailRepositoryTest {
                         "In a tall glass , add ice and all the ingredients and stir well. It should have the appearance of cloudy tea. Top with a piece of lemon\n"
                                 + "\n"
                                 + "Very yummy & very very decieving. It will get you hammered after only about 2 so drink with caution") //
-                .withComment("Too strong for me!!");
+                .addComment("Too strong for me!!");
         return longIslandIcedTea;
     }
 

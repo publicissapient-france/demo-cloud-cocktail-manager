@@ -26,6 +26,9 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import net.tanesha.recaptcha.ReCaptcha;
+import net.tanesha.recaptcha.ReCaptchaResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -63,6 +66,30 @@ public class CocktailManager {
 
     @Inject
     private AmazonS3FileStorageService fileStorageService;
+
+    @Inject
+    private ReCaptcha captcha;
+
+    @RequestMapping(value = "/cocktail/{id}/comment", method = RequestMethod.POST)
+    public String addComment(@PathVariable String id, @RequestParam("comment") String comment, HttpServletRequest request) {
+
+        ReCaptchaResponse response = captcha.checkAnswer(request.getRemoteAddr(), request.getParameter("recaptcha_challenge_field"),
+                request.getParameter("recaptcha_response_field"));
+
+        if (response.isValid()) {
+            Cocktail cocktail = cocktailRepository.get(id);
+            if (cocktail == null) {
+                throw new ResourceNotFoundException(id);
+            }
+            logger.debug("Add comment: '{}' to {}", comment, cocktail);
+            cocktail.getComments().addFirst(comment);
+            cocktailRepository.update(cocktail);
+        } else {
+            logger.warn("KO - wrong captcha: {}", response.getErrorMessage());
+        }
+
+        return "redirect:/cocktail/{id}";
+    }
 
     @RequestMapping(method = RequestMethod.POST, value = "/cocktail")
     public String create(@Valid Cocktail cocktail, BindingResult result) {
