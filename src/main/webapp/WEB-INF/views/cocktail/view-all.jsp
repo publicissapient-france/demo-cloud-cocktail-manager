@@ -69,16 +69,12 @@
                     </c:if>
                 </div>
                 <div class="span11">
-                    <a href="${pageContext.request.contextPath}/cocktail/${cocktail.id}"><h2>${cocktail.name}</h2></a> <br />
+                    <h2><a href="${pageContext.request.contextPath}/cocktail/${cocktail.id}">${cocktail.name}</a></h2>
+                    <br/>
                     <blockquote>${cocktail.instructionsAsHtml}</blockquote>
                 </div>
             </div>
         </c:forEach>
-
-        <footer>
-            <p>&copy; Xebia 2012</p>
-        </footer>
-
     </div>
 </body>
 </html>
