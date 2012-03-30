@@ -48,9 +48,11 @@ public class Cocktail implements Comparable<Cocktail> {
     private String photoUrl;
 
     /**
-     * 
+     * URL of the cocktail recipe that has been used
      */
     private String sourceUrl;
+
+    private List<String> comments = Lists.newArrayList();
 
     @Override
     public int compareTo(Cocktail other) {
@@ -70,6 +72,10 @@ public class Cocktail implements Comparable<Cocktail> {
         Cocktail other = (Cocktail) obj;
 
         return Objects.equal(this.objectId, other.objectId);
+    }
+
+    public List<String> getComments() {
+        return comments;
     }
 
     public String getId() {
@@ -109,9 +115,17 @@ public class Cocktail implements Comparable<Cocktail> {
         return photoUrl;
     }
 
+    public String getSourceUrl() {
+        return sourceUrl;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(this.objectId);
+    }
+
+    public void setComments(List<String> comments) {
+        this.comments = comments;
     }
 
     public void setId(String id) {
@@ -138,12 +152,21 @@ public class Cocktail implements Comparable<Cocktail> {
         this.photoUrl = photoUrl;
     }
 
+    public void setSourceUrl(String sourceUrl) {
+        this.sourceUrl = sourceUrl;
+    }
+
     @Override
     public String toString() {
         return Objects.toStringHelper(this) //
                 .add("objectId", this.objectId) //
                 .add("name", this.name) //
                 .toString();
+    }
+
+    public Cocktail withComment(String comment) {
+        getComments().add(comment);
+        return this;
     }
 
     public Cocktail withId(String id) {
@@ -174,14 +197,6 @@ public class Cocktail implements Comparable<Cocktail> {
     public Cocktail withPhotoUrl(String photoUrl) {
         setPhotoUrl(photoUrl);
         return this;
-    }
-
-    public String getSourceUrl() {
-        return sourceUrl;
-    }
-
-    public void setSourceUrl(String sourceUrl) {
-        this.sourceUrl = sourceUrl;
     }
 
     public Cocktail withSourceUrl(String sourceUrl) {

@@ -126,6 +126,11 @@ public class CocktailRepository {
             cocktail.getIngredients().add(ingredient);
         }
 
+        @SuppressWarnings("unchecked")
+        List<String> comments = (List<String>) cocktailAsDbObject.get("comments");
+        cocktail.setComments(comments);
+        
+        
         return cocktail;
     }
 
@@ -201,6 +206,10 @@ public class CocktailRepository {
             ingredients.add(BasicDBObjectBuilder.start().add("name", ingredient.getName()).add("quantity", ingredient.getQuantity()).get());
         }
 
+        BasicDBList comments = new BasicDBList();
+        rootBuilder.add("comments", comments);
+        comments.addAll(cocktail.getComments());
+        
         DBObject root = rootBuilder.get();
         return root;
     }
