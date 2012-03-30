@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Coktail - ${coktail.name}</title>
+<title>Cocktail - ${cocktail.name}</title>
 
 <link rel="shortcut icon" href="${pageContext.request.contextPath}/img/favicon.ico">
 <link rel="icon" type="image/png" href="/${pageContext.request.contextPath}/img/favicon.png">

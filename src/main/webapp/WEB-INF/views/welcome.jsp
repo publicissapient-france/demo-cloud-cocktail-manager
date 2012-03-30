@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Coktail Manager</title>
+<title>Cocktail Manager</title>
 
 <link rel="shortcut icon" href="${pageContext.request.contextPath}/img/favicon.ico">
 <link rel="icon" type="image/png" href="/${pageContext.request.contextPath}/img/favicon.png">
