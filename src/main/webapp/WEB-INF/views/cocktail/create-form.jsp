@@ -43,6 +43,7 @@
 		</c:forEach>
 	});
 </script>
+<%@ include file="../analyticstracking.jspf" %>
 </head>
 <body>
     <div class="navbar">

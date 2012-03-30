@@ -36,6 +36,7 @@
         });
     });
 </script>
+<%@ include file="../analyticstracking.jspf" %>
 </head>
 <body>
 

@@ -33,6 +33,7 @@
         });
     });
 </script>
+<%@ include file="analyticstracking.jspf" %>
 <body>
     <div class="navbar">
         <div class="navbar-inner">
@@ -54,10 +55,26 @@
     </div>
 
     <div class="container">
-        <ul>
-            <li><a href="${pageContext.request.contextPath}/cocktail/create-form">Create Cocktail</a></li>
-            <li><a href="${pageContext.request.contextPath}/cocktail/">Cocktails</a></li>
-        </ul>
+        <div class="row">
+            <div class="span6">
+                <div class="hero-unit">
+                    <h2>A to Z cocktails list</h2>
+                    <p>A to Z list of cocktail recipes.</p>
+                    <p>
+                        <a class="btn btn-primary btn-large" href="${pageContext.request.contextPath}/cocktail/"> Visit our cocktails! </a>
+                    </p>
+                </div>
+            </div>
+            <div class="span6">
+                <div class="hero-unit">
+                    <h2>Add your cocktail</h2>
+                    <p>Add you cocktail recipe.</p>
+                    <p>
+                        <a class="btn btn-primary btn-large" href="${pageContext.request.contextPath}/cocktail/create-form"> Write your cocktail recipe </a>
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
