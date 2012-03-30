@@ -7,7 +7,7 @@
 <head>
 
 <link rel="shortcut icon" href="${pageContext.request.contextPath}/img/favicon.ico">
-<link rel="icon" type="image/png" href="/${pageContext.request.contextPath}/img/favicon.png">
+<link rel="icon" type="image/png" href="${pageContext.request.contextPath}/img/favicon.png">
 
 <title>Cocktails</title>
 <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
