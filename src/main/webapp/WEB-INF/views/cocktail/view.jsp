@@ -7,6 +7,9 @@
 <head>
 <title>Coktail - ${coktail.name}</title>
 
+<link rel="shortcut icon" href="${pageContext.request.contextPath}/img/favicon.ico">
+<link rel="icon" type="image/png" href="/${pageContext.request.contextPath}/img/favicon.png">
+
 <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
 <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -39,7 +42,9 @@
     <div class="navbar">
         <div class="navbar-inner">
             <div class="container">
-                <a class="brand" href="${pageContext.request.contextPath}/">Cocktail Manager</a>
+                <a class="brand" href="${pageContext.request.contextPath}/"> <img alt='Devoxx France Logo' height='28'
+                    src='${pageContext.request.contextPath}/img/devoxx-france-logo.jpg' width='54' /> Cocktail Manager
+                </a>
                 <ul class="nav">
                     <li><a href="${pageContext.request.contextPath}/">Home</a></li>
                     <li class="active"><a href="${pageContext.request.contextPath}/cocktail/">Cocktails</a></li>
