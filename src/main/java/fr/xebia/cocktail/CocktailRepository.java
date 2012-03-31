@@ -180,10 +180,10 @@ public class CocktailRepository {
 
         List<String> solrQueryPredicates = Lists.newArrayList();
         if (!Strings.isNullOrEmpty(ingredient)) {
-            solrQueryPredicates.add("ingredient:" + ingredient);
+            solrQueryPredicates.add("ingredient:" + ingredient + "*");
         }
         if (!Strings.isNullOrEmpty(name)) {
-            solrQueryPredicates.add("name:" + name);
+            solrQueryPredicates.add("name:" + name + "*");
         }
 
         DBCursor cursor;
