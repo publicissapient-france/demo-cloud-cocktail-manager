@@ -56,10 +56,12 @@
                     <li><a href="${pageContext.request.contextPath}/">Home</a></li>
                     <li class="active"><a href="${pageContext.request.contextPath}/cocktail/">Cocktails</a></li>
                 </ul>
-                <form class="navbar-search pull-left">
-                    <input id="searchCocktailByName" name="searchCocktailByName" type="text" class="search-query"
-                        placeholder="Search by name"> <input id="searchCocktailByIngredient" name="searchCocktailByIngredient"
-                        type="text" class="search-query" placeholder="Search by ingredient">
+                <form class="navbar-search pull-left" action="${pageContext.request.contextPath}/cocktail/">
+                    <input id="searchCocktailByName" name="name" type="text" class="search-query" placeholder="Search by name">
+                </form>
+                <form class="navbar-search pull-left" action="${pageContext.request.contextPath}/cocktail/">
+                    <input id="searchCocktailByIngredient" name="ingredient" type="text" class="search-query"
+                        placeholder="Search by ingredient">
                 </form>
             </div>
         </div>

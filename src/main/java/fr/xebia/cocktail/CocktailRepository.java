@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nullable;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
@@ -33,6 +34,8 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.SpellCheckResponse;
 import org.apache.solr.client.solrj.response.SpellCheckResponse.Suggestion;
 import org.apache.solr.client.solrj.response.UpdateResponse;
+import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
@@ -41,10 +44,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.base.Throwables;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -61,6 +69,64 @@ import com.mongodb.WriteResult;
  */
 @Repository
 public class CocktailRepository {
+
+    @VisibleForTesting
+    protected static Function<DBObject, Cocktail> BSON_TO_COCKTAIL = new Function<DBObject, Cocktail>() {
+
+        @Override
+        public Cocktail apply(DBObject cocktailAsDbObject) {
+            Cocktail cocktail = new Cocktail();
+            cocktail.setObjectId((ObjectId) cocktailAsDbObject.get("_id"));
+            cocktail.setName((String) cocktailAsDbObject.get("name"));
+            cocktail.setInstructions((String) cocktailAsDbObject.get("instructions"));
+            cocktail.setPhotoUrl((String) cocktailAsDbObject.get("photoUrl"));
+            cocktail.setSourceUrl((String) cocktailAsDbObject.get("sourceUrl"));
+
+            @SuppressWarnings("unchecked")
+            List<DBObject> ingredientsAsDbObjects = (List<DBObject>) cocktailAsDbObject.get("ingredients");
+            for (DBObject ingredientAsDbObject : ingredientsAsDbObjects) {
+                Ingredient ingredient = new Ingredient((String) ingredientAsDbObject.get("quantity"),
+                        (String) ingredientAsDbObject.get("name"));
+                cocktail.getIngredients().add(ingredient);
+            }
+
+            @SuppressWarnings("unchecked")
+            List<String> comments = (List<String>) cocktailAsDbObject.get("comments");
+            if (comments != null) {
+                cocktail.getComments().addAll(comments);
+            }
+
+            return cocktail;
+        }
+    };
+
+    @VisibleForTesting
+    protected static Function<Cocktail, DBObject> COCKTAIL_TO_BSON = new Function<Cocktail, DBObject>() {
+        @Override
+        public DBObject apply(Cocktail cocktail) {
+            BasicDBObjectBuilder rootBuilder = BasicDBObjectBuilder.start();
+            rootBuilder.add("_id", cocktail.getObjectId());
+            rootBuilder.add("id", cocktail.getId());
+            rootBuilder.add("name", cocktail.getName());
+            rootBuilder.add("instructions", cocktail.getInstructions());
+            rootBuilder.add("photoUrl", cocktail.getPhotoUrl());
+            rootBuilder.add("sourceUrl", cocktail.getSourceUrl());
+
+            BasicDBList ingredients = new BasicDBList();
+            rootBuilder.add("ingredients", ingredients);
+            for (Ingredient ingredient : cocktail.getIngredients()) {
+                ingredients.add(BasicDBObjectBuilder.start().add("name", ingredient.getName()).add("quantity", ingredient.getQuantity())
+                        .get());
+            }
+
+            BasicDBList comments = new BasicDBList();
+            rootBuilder.add("comments", comments);
+            comments.addAll(cocktail.getComments());
+
+            DBObject root = rootBuilder.get();
+            return root;
+        }
+    };
 
     @VisibleForTesting
     protected DBCollection cocktails;
@@ -110,44 +176,66 @@ public class CocktailRepository {
         }
     }
 
-    @VisibleForTesting
-    protected Cocktail fromBson(DBObject cocktailAsDbObject) {
-        Cocktail cocktail = new Cocktail();
-        cocktail.setObjectId((ObjectId) cocktailAsDbObject.get("_id"));
-        cocktail.setName((String) cocktailAsDbObject.get("name"));
-        cocktail.setInstructions((String) cocktailAsDbObject.get("instructions"));
-        cocktail.setPhotoUrl((String) cocktailAsDbObject.get("photoUrl"));
-        cocktail.setSourceUrl((String) cocktailAsDbObject.get("sourceUrl"));
+    public Collection<Cocktail> find(@Nullable String ingredient, @Nullable String name) {
 
-        @SuppressWarnings("unchecked")
-        List<DBObject> ingredientsAsDbObjects = (List<DBObject>) cocktailAsDbObject.get("ingredients");
-        for (DBObject ingredientAsDbObject : ingredientsAsDbObjects) {
-            Ingredient ingredient = new Ingredient((String) ingredientAsDbObject.get("quantity"), (String) ingredientAsDbObject.get("name"));
-            cocktail.getIngredients().add(ingredient);
+        List<String> solrQueryPredicates = Lists.newArrayList();
+        if (!Strings.isNullOrEmpty(ingredient)) {
+            solrQueryPredicates.add("ingredient:" + ingredient);
+        }
+        if (!Strings.isNullOrEmpty(name)) {
+            solrQueryPredicates.add("name:" + name);
         }
 
-        @SuppressWarnings("unchecked")
-        List<String> comments = (List<String>) cocktailAsDbObject.get("comments");
-        if (comments != null) {
-            cocktail.getComments().addAll(comments);
+        DBCursor cursor;
+        if (solrQueryPredicates.isEmpty()) {
+            cursor = this.cocktails.find().sort(new BasicDBObject("name", "{x : -1}"));
+
+        } else {
+            SolrQuery solrQuery = new SolrQuery();
+            String query = Joiner.on(" AND ").join(solrQueryPredicates);
+            solrQuery.setQuery(query);
+            try {
+                QueryResponse solrResponse = solrServer.query(solrQuery);
+                logger.trace("Response for {}: {}", query, solrResponse);
+                SolrDocumentList docs = solrResponse.getResults();
+                if (docs.isEmpty()) {
+                    return Collections.emptyList();
+                }
+                Iterable<String> cocktailIds = Iterables.transform(docs, SOLR_DOCUMENT_ID_EXTRACTOR);
+                Iterable<DBObject> cocktailsIdsAsDbObjects = Iterables.transform(cocktailIds, BSON_OBJECT_ID_BUILDER);
+
+                cursor = this.cocktails.find(new BasicDBObject("$or", cocktailsIdsAsDbObjects));
+
+                // TODO : ordering
+
+            } catch (SolrServerException e) {
+                throw Throwables.propagate(e);
+            }
         }
 
-        return cocktail;
+        return Lists.newArrayList(Iterables.transform(cursor, BSON_TO_COCKTAIL));
     }
+
+    @VisibleForTesting
+    protected static Function<String, DBObject> BSON_OBJECT_ID_BUILDER = new Function<String, DBObject>() {
+        @Override
+        public DBObject apply(String objectId) {
+            return new BasicDBObject("_id", new ObjectId(objectId));
+        }
+    };
+
+    @VisibleForTesting
+    protected static Function<SolrDocument, String> SOLR_DOCUMENT_ID_EXTRACTOR = new Function<SolrDocument, String>() {
+        @Override
+        public String apply(SolrDocument solrDocument) {
+            return (String) solrDocument.getFieldValue("id");
+        }
+
+    };
 
     public Cocktail get(String id) {
         DBObject dbObject = cocktails.findOne(BasicDBObjectBuilder.start().add("_id", new ObjectId(id)).get());
-        return fromBson(dbObject);
-    }
-
-    public Collection<Cocktail> getAll() {
-        DBCursor cursor = cocktails.find();
-
-        List<Cocktail> cocktails = Lists.newArrayList();
-        for (DBObject dbObject : cursor) {
-            cocktails.add(fromBson(dbObject));
-        }
-        return cocktails;
+        return BSON_TO_COCKTAIL.apply(dbObject);
     }
 
     public void insert(Cocktail cocktail) {
@@ -164,7 +252,7 @@ public class CocktailRepository {
             logger.trace("solr.add for {}: {}", cocktail, solrResponse);
 
             // MONGODB
-            DBObject bson = toBson(cocktail);
+            DBObject bson = COCKTAIL_TO_BSON.apply(cocktail);
             WriteResult mongoResult = cocktails.insert(bson, WriteConcern.SAFE);
             logger.trace("mongo.insert for {}: {}", cocktail, mongoResult);
         } catch (Exception e) {
@@ -192,27 +280,39 @@ public class CocktailRepository {
         }
     }
 
-    protected DBObject toBson(Cocktail cocktail) {
-        BasicDBObjectBuilder rootBuilder = BasicDBObjectBuilder.start();
-        rootBuilder.add("_id", cocktail.getObjectId());
-        rootBuilder.add("id", cocktail.getId());
-        rootBuilder.add("name", cocktail.getName());
-        rootBuilder.add("instructions", cocktail.getInstructions());
-        rootBuilder.add("photoUrl", cocktail.getPhotoUrl());
-        rootBuilder.add("sourceUrl", cocktail.getSourceUrl());
+    public List<String> suggestCocktailIngredientWords(String query) {
+        return suggestCocktailWord(query, "/suggest/ingredient");
+    }
 
-        BasicDBList ingredients = new BasicDBList();
-        rootBuilder.add("ingredients", ingredients);
-        for (Ingredient ingredient : cocktail.getIngredients()) {
-            ingredients.add(BasicDBObjectBuilder.start().add("name", ingredient.getName()).add("quantity", ingredient.getQuantity()).get());
+    public List<String> suggestCocktailNameWords(String query) {
+        return suggestCocktailWord(query, "/suggest/name");
+    }
+
+    private List<String> suggestCocktailWord(String query, String solrQueryType) {
+        query = Strings.nullToEmpty(query);
+        if (query.length() < 2) {
+            return Collections.emptyList();
         }
 
-        BasicDBList comments = new BasicDBList();
-        rootBuilder.add("comments", comments);
-        comments.addAll(cocktail.getComments());
+        SolrQuery solrQuery = new SolrQuery();
+        solrQuery.setQuery(query);
+        solrQuery.setQueryType(solrQueryType);
 
-        DBObject root = rootBuilder.get();
-        return root;
+        List<String> words = Lists.newArrayList();
+
+        try {
+            QueryResponse solrResponse = solrServer.query(solrQuery);
+            logger.trace("Response for {}: {}", query, solrResponse);
+            SpellCheckResponse resp = solrResponse.getSpellCheckResponse();
+            List<Suggestion> suggestions = resp.getSuggestions();
+            for (Suggestion suggestion : suggestions) {
+                words.addAll(suggestion.getAlternatives());
+            }
+        } catch (SolrServerException e) {
+            logger.warn("Silently skip solr exception and return empty result", e);
+        }
+
+        return words;
     }
 
     protected SolrInputDocument toSolrInputDocument(Cocktail cocktail) {
@@ -237,47 +337,11 @@ public class CocktailRepository {
             logger.trace("solr.add for {}: {}", cocktail, solrResponse);
 
             // MONGODB
-            DBObject root = toBson(cocktail);
+            DBObject root = CocktailRepository.COCKTAIL_TO_BSON.apply(cocktail);
             WriteResult mongoResult = cocktails.save(root, WriteConcern.SAFE);
             logger.trace("mongo.save for {}: {}", cocktail, mongoResult);
         } catch (Exception e) {
             throw new RuntimeException("Exception updating " + cocktail, e);
         }
-    }
-
-    public List<String> suggestCocktailNameWords(String query) {
-        return suggestCocktailWord(query, "/suggest/name");
-    }
-
-    public List<String> suggestCocktailIngredientWords(String query) {
-        return suggestCocktailWord(query, "/suggest/ingredient");
-    }
-
-    private List<String> suggestCocktailWord(String query, String solrQueryType) {
-        query = Strings.nullToEmpty(query);
-        if (query.length() < 2) {
-            return Collections.emptyList();
-        }
-
-        // escape special characters
-        SolrQuery solrQuery = new SolrQuery();
-        solrQuery.setQuery(query);
-        solrQuery.setQueryType(solrQueryType);
-
-        List<String> words = Lists.newArrayList();
-
-        try {
-            QueryResponse solrResponse = solrServer.query(solrQuery);
-            logger.trace("Response for {}: {}", query, solrResponse);
-            SpellCheckResponse resp = solrResponse.getSpellCheckResponse();
-            List<Suggestion> suggestions = resp.getSuggestions();
-            for (Suggestion suggestion : suggestions) {
-                words.addAll(suggestion.getAlternatives());
-            }
-        } catch (SolrServerException e) {
-            logger.warn("Silently skip solr exception and return empty result", e);
-        }
-
-        return words;
     }
 }

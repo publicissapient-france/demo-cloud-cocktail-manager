@@ -65,9 +65,8 @@ public class MongoDBCocktailRepositoryTest {
         ObjectId objectId = ObjectId.get();
         sexOnTheBeach.setObjectId(objectId);
 
-        DBObject sexOnTheBeachAsDbObject = cocktailRepository.toBson(sexOnTheBeach);
-
-        Cocktail actual = cocktailRepository.fromBson(sexOnTheBeachAsDbObject);
+        DBObject sexOnTheBeachAsDbObject = CocktailRepository.COCKTAIL_TO_BSON.apply(sexOnTheBeach);
+        Cocktail actual = CocktailRepository.BSON_TO_COCKTAIL.apply(sexOnTheBeachAsDbObject);
 
         assertEquals(objectId, actual.getObjectId());
         assertEquals("Sex On The Beach", actual.getName());

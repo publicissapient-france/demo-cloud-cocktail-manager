@@ -33,7 +33,7 @@
         });
     });
 </script>
-<%@ include file="analyticstracking.jspf" %>
+<%@ include file="analyticstracking.jspf"%>
 <body>
     <div class="navbar">
         <div class="navbar-inner">
@@ -45,10 +45,12 @@
                     <li class="active"><a href="${pageContext.request.contextPath}/">Home</a></li>
                     <li><a href="${pageContext.request.contextPath}/cocktail/">Cocktails</a></li>
                 </ul>
-                <form class="navbar-search pull-left">
-                    <input id="searchCocktailByName" name="searchCocktailByName" type="text" class="search-query"
-                        placeholder="Search by name"> <input id="searchCocktailByIngredient" name="searchCocktailByIngredient"
-                        type="text" class="search-query" placeholder="Search by ingredient">
+                <form class="navbar-search pull-left" action="${pageContext.request.contextPath}/cocktail/">
+                    <input id="searchCocktailByName" name="name" type="text" class="search-query" placeholder="Search by name">
+                </form>
+                <form class="navbar-search pull-left" action="${pageContext.request.contextPath}/cocktail/">
+                    <input id="searchCocktailByIngredient" name="ingredient" type="text" class="search-query"
+                        placeholder="Search by ingredient">
                 </form>
             </div>
         </div>
@@ -70,7 +72,8 @@
                     <h2>Add your cocktail</h2>
                     <p>Add you cocktail recipe.</p>
                     <p>
-                        <a class="btn btn-primary btn-large" href="${pageContext.request.contextPath}/cocktail/create-form"> Write your cocktail recipe </a>
+                        <a class="btn btn-primary btn-large" href="${pageContext.request.contextPath}/cocktail/create-form"> Write your
+                            cocktail recipe </a>
                     </p>
                 </div>
             </div>

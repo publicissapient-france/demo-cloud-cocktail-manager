@@ -222,7 +222,10 @@ public class CocktailManager {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/cocktail")
-    public ModelAndView viewAll() {
-        return new ModelAndView("cocktail/view-all", "cocktails", cocktailRepository.getAll());
+    public ModelAndView find(@RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "ingredient", required = false) String ingredient, HttpServletRequest request) {
+
+        Collection<Cocktail> cocktails = cocktailRepository.find(ingredient, name);
+        return new ModelAndView("cocktail/view-all", "cocktails", cocktails);
     }
 }
