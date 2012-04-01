@@ -16,6 +16,9 @@
 <!-- -->
 <!-- CLOUDBEES CONFIGURATION PARAMETERS -->
 <!-- http://wiki.cloudbees.com/bin/view/RUN/Configuration+Parameters -->
+<!--  -->
+<!-- bees config:update -a atelier-xebia/cocktail-manager cloudbees-config.xml -->
+<!-- bees config:list -a atelier-xebia/cocktail-manager -->
 <config>
 
    <param name="spring.profiles.active" value="prod" />
