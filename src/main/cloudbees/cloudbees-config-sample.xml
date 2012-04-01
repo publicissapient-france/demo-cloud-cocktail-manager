@@ -49,6 +49,6 @@
    <param name="recaptcha.privateKey" value="#RECAPTCHA_PRIVATE_KEY#" />
 
    <!-- SOLR -->
-   <param name="solr.url" value="http://index.websolr.com/solr/7a5ae0d2d39" />
+   <param name="solr.url" value="#SOLR_URL#" />
 
 </config>
