@@ -53,10 +53,13 @@
    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
 
    <beans profile="default">
+      <!-- environment specific parameters are injected via environment-localhost.properties -->
       <context:property-placeholder location="classpath:environment-localhost.properties"
          system-properties-mode="OVERRIDE" />
    </beans>
    <beans profile="prod">
+      <!-- environment specific parameters are injected via system properties -->
+      <!-- (Tomcat's catalina.properties, CloudBess' configuration parameters, etc) -->
       <context:property-placeholder system-properties-mode="OVERRIDE" />
    </beans>
 </beans>

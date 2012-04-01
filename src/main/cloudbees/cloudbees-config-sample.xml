@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- -->
+<!-- Copyright 2008-2012 Xebia and the original author or authors. -->
+<!-- -->
+<!-- Licensed under the Apache License, Version 2.0 (the "License"); -->
+<!-- you may not use this file except in compliance with the License. -->
+<!-- You may obtain a copy of the License at -->
+<!-- -->
+<!-- http://www.apache.org/licenses/LICENSE-2.0 -->
+<!-- -->
+<!-- Unless required by applicable law or agreed to in writing, software -->
+<!-- distributed under the License is distributed on an "AS IS" BASIS, -->
+<!-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. -->
+<!-- See the License for the specific language governing permissions and -->
+<!-- limitations under the License. -->
+<!-- -->
+<!-- CLOUDBEES CONFIGURATION PARAMETERS -->
+<!-- http://wiki.cloudbees.com/bin/view/RUN/Configuration+Parameters -->
+<config>
+
+   <param name="spring.profiles.active" value="prod" />
+
+   <!-- AMAZON -->
+   <!-- see http://aws.amazon.com/security-credentials -->
+   <!-- xebia-cocktail amazon user -->
+   <param name="aws.accessKey" value="#AWS_ACCESS_KEY#" />
+   <param name="aws.secretKey" value="#AWS_SECRET_KEY#" />
+   <param name="aws.s3.bucketBaseUrl" value="http://xebia-cocktail.s3-website-us-east-1.amazonaws.com/" />
+   <param name="aws.s3.bucketName" value="xebia-cocktail" />
+
+   <!-- MAIL -->
+   <param name="mail.smtp.host" value="smtp.sendgrid.net" />
+   <param name="mail.smtp.port" value="587" />
+   <param name="mail.username" value="#SENDGRID_USERNAME#" />
+   <param name="mail.password" value="#SENDGRID_PASSWORD#" />
+
+   <!-- MONGODB -->
+   <param name="mongodb.uri" value="mongodb://#MONGO_USERNAME#:#MONGO_PASSWORD#@boone.mongohq.com:10085/devoxxfr-demo" />
+
+   <!-- PAPERTRAIL -->
+   <param name="papertrail.host" value="logs.papertrailapp.com" />
+   <param name="papertrail.port" value="#PAPERTRAIL_PORT#" />
+
+   <!-- RE CAPTCHA -->
+   <param name="recaptcha.publicKey" value="#RECAPTCHA_PUBLIC_KEY#" />
+   <param name="recaptcha.privateKey" value="#RECAPTCHA_PRIVATE_KEY#" />
+
+   <!-- SOLR -->
+   <param name="solr.url" value="http://index.websolr.com/solr/7a5ae0d2d39" />
+
+</config>
