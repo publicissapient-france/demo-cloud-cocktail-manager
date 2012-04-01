@@ -64,6 +64,7 @@ import com.mongodb.WriteConcern;
 import com.mongodb.WriteResult;
 
 /**
+ * Repository for cocktails (MongoDB + Solr).
  * 
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */

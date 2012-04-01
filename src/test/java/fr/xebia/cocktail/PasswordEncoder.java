@@ -19,18 +19,18 @@ package fr.xebia.cocktail;
 import org.springframework.security.authentication.encoding.LdapShaPasswordEncoder;
 
 /**
+ * Small util to {SHA} encode password for <code>src/main/webapp/WEB-INF/applicationContext.xml</code>.
  * 
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
 public class PasswordEncoder {
 
     public static void main(String[] args) {
-        
-        
+
         LdapShaPasswordEncoder passwordEncoder = new LdapShaPasswordEncoder();
-        
+
         String pwd = passwordEncoder.encodePassword("foo", null);
         System.out.println(pwd);
-        
+
     }
 }

@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
 import com.google.common.base.Strings;
 
 /**
+ * Javamail based mailer.
  * 
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */

@@ -50,6 +50,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 
 /**
+ * Main controller of the application.
  * 
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */

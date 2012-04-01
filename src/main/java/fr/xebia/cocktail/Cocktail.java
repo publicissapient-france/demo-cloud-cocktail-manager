@@ -31,7 +31,7 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
 
 /**
- * The recipe of a cocktail
+ * The recipe of a cocktail. Root model object.
  * 
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
