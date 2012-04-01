@@ -23,10 +23,10 @@
    <description>cocktail-manager demo</description>
    <packaging>war</packaging>
    <version>1.0.0-SNAPSHOT</version>
-   <url>https://github.com/cyrille-leclerc/cocktail-manager</url>
+   <url>https://github.com/xebia-france/demo-cloud-cocktail-manager</url>
    <scm>
-      <connection>scm:git:git://github.com/cyrille-leclerc/cocktail-manager.git</connection>
-      <developerConnection>scm:git:git@github.com:cyrille-leclerc/cocktail-manager.git</developerConnection>
+      <connection>scm:git:git://github.com/xebia-france/demo-cloud-cocktail-manager.git</connection>
+      <developerConnection>scm:git:git@github.com:xebia-france/demo-cloud-cocktail-manager.git</developerConnection>
    </scm>
    <properties>
       <org.springframework-version>3.1.1.RELEASE</org.springframework-version>
