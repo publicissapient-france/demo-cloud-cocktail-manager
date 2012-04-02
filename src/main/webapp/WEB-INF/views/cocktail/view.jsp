@@ -1,5 +1,5 @@
-<%@page import="net.tanesha.recaptcha.ReCaptcha"%>
-<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@ page import="net.tanesha.recaptcha.ReCaptcha"%>
+<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
@@ -9,8 +9,8 @@
 <head>
 <title>Cocktail - ${cocktail.name}</title>
 
-<link rel="shortcut icon" href="${pageContext.request.contextPath}/img/favicon.ico">
-<link rel="icon" type="image/png" href="${pageContext.request.contextPath}/img/favicon.png">
+<link rel="shortcut icon" href="${cdnUrl}${pageContext.request.contextPath}/img/favicon.ico">
+<link rel="icon" type="image/png" href="${cdnUrl}${pageContext.request.contextPath}/img/favicon.png">
 
 <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
 <!--[if lt IE 9]>
@@ -18,14 +18,14 @@
     <![endif]-->
 
 <!-- Le styles -->
-<link href="${pageContext.request.contextPath}/css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" />
-<link href="${pageContext.request.contextPath}/css/bootstrap-responsive.min.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="${cdnUrl}${pageContext.request.contextPath}/css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="${cdnUrl}${pageContext.request.contextPath}/css/bootstrap-responsive.min.css" media="screen" rel="stylesheet" type="text/css" />
 <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/base/jquery-ui.css" rel="Stylesheet" type="text/css" />
 
 <!-- Le javascript -->
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="${cdnUrl}${pageContext.request.contextPath}/js/bootstrap.min.js" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("input#searchCocktailByName").autocomplete({

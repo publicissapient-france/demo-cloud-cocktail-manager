@@ -24,6 +24,15 @@
       <property name="publicKey" value="${recaptcha.publicKey}" />
       <property name="includeNoscript" value="false" />
    </bean>
+   
+   <!-- JSP EL variables -->
+   <bean class="org.springframework.web.context.support.ServletContextAttributeExporter">
+      <property name="attributes">
+         <map>
+            <entry key="cdnUrl" value="#{ systemProperties['cdn.url'] == null ? '' : systemProperties['cdn.url'] }" />
+         </map>
+      </property>
+   </bean>
 
    <beans profile="default">
       <context:property-placeholder location="classpath:environment-localhost.properties"

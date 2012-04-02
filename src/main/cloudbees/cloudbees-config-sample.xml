@@ -30,6 +30,9 @@
    <param name="aws.secretKey" value="#AWS_SECRET_KEY#" />
    <param name="aws.s3.bucketBaseUrl" value="http://xebia-cocktail.s3-website-us-east-1.amazonaws.com/" />
    <param name="aws.s3.bucketName" value="xebia-cocktail" />
+   
+   <!-- CDN / CONTENT DELIVERY NETWORK -->
+   <param name="cdn.url" value="http://d1u3j4x9ltwfxi.cloudfront.net" />
 
    <!-- MAIL -->
    <param name="mail.smtp.host" value="smtp.sendgrid.net" />
