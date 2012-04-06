@@ -5,7 +5,9 @@
 <!-- <%=System.currentTimeMillis()%> -->
 
 <%@page import="java.net.InetAddress"%>
-<%@page import="java.util.Map.Entry"%><HTML>
+<%@page import="java.util.Map.Entry"%>
+<%@ page import="com.google.common.collect.Lists" %>
+<HTML>
 <HEAD>
 <TITLE>Servlet's information</TITLE>
 </HEAD>
@@ -96,6 +98,18 @@
             <td><%=request.getServletPath()%></td>
         </tr>
         <tr>
+            <td>ServerName</td>
+            <td><%=request.getServerName()%></td>
+        </tr>
+        <tr>
+            <td>ServerPort</td>
+            <td><%=request.getServerPort()%></td>
+        </tr>
+        <tr>
+            <td>ServletPath</td>
+            <td><%=request.getServletPath()%></td>
+        </tr>
+        <tr>
             <td>isRequestedSessionIdFromCookie</td>
             <td><%=request.isRequestedSessionIdFromCookie()%></td>
         </tr>
@@ -145,7 +159,9 @@
     <%
         out.println("<table border='1'>");
         out.println("<tr><th>Name</th><th>Value</th></tr>");
-        for (String attribute : Collections.list((Enumeration<String>) request.getAttributeNames())) {
+        List<String> attributeNames = Collections.list((Enumeration<String>) request.getAttributeNames());
+        Collections.sort(attributeNames);
+        for (String attribute : attributeNames) {
             out.println("<tr><td>" + attribute + "</td><td>" + request.getAttribute(attribute) + "</td></tr>");
         }
         out.println("</table>");
@@ -238,7 +254,9 @@
             <th>Value</th>
         </tr>
         <%
-            for (String attribute : Collections.list((Enumeration<String>) application.getAttributeNames())) {
+            List<String> applicationAttributeNames = Collections.list((Enumeration<String>) application.getAttributeNames());
+            Collections.sort(applicationAttributeNames);
+            for (String attribute : applicationAttributeNames) {
                 String value;
                 if (attribute.indexOf("classpath") >= 0) {
                     value = "<pre>";
@@ -268,7 +286,9 @@
             <th>Value</th>
         </tr>
         <%
-            for (String parameter : Collections.list((Enumeration<String>) application.getInitParameterNames())) {
+            List<String> applicationInitParameterNames = Collections.list((Enumeration<String>) application.getInitParameterNames());
+            Collections.sort(applicationInitParameterNames);
+            for (String parameter : applicationInitParameterNames) {
                 out.println("<tr><td>" + parameter + "</td><td>" + application.getInitParameter(parameter) + "</td></tr>");
             }
         %>
@@ -306,10 +326,11 @@
             <th>Value</th>
         </tr>
         <%
-            for (Map.Entry<Object, Object> entry : System.getProperties().entrySet()) {
+            List<String> systemPropertyNames = new ArrayList<String>(System.getProperties().stringPropertyNames());
+            Collections.sort(systemPropertyNames);
+            for (String propertyName : systemPropertyNames) {
 
-                String propertyName = (String) entry.getKey();
-                String propertyValue = (String) entry.getValue();
+                String propertyValue = System.getProperty(propertyName);
 
                 out.println("<tr><td valign='top'>" + propertyName + "</td><td>");
 
