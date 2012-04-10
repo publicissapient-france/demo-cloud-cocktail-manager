@@ -39,16 +39,20 @@ public class MailService {
 
     protected final Logger auditLogger = LoggerFactory.getLogger("audit");
 
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
+
     protected InternetAddress fromAddress;
 
     @Inject
     public MailService(@Named("smtpProperties") Properties smtpProperties) throws MessagingException {
 
-        if (Strings.isNullOrEmpty(smtpProperties.getProperty("mail_username"))) {
+        if (Strings.isNullOrEmpty(smtpProperties.getProperty("mail.username"))) {
+            logger.info("Initialize anonymous mail session");
             mailSession = Session.getInstance(smtpProperties);
         } else {
-            final String username = smtpProperties.getProperty("mail_username");
-            final String password = smtpProperties.getProperty("mail_password");
+            final String username = smtpProperties.getProperty("mail.username");
+            final String password = smtpProperties.getProperty("mail.password");
+            logger.info("Initialize mail session with username='{}', password='xxx'", username);
 
             mailSession = Session.getInstance(smtpProperties, new Authenticator() {
                 @Override
