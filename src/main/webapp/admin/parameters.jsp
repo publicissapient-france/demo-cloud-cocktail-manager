@@ -296,27 +296,27 @@
         List<String> applicationAttributeNames = Collections.list((Enumeration<String>) application.getAttributeNames());
         Collections.sort(applicationAttributeNames);
         for (String attribute : applicationAttributeNames) {
+            Object rawValue = application.getAttribute(attribute);
             String value;
             try {
                 if (attribute.indexOf("classpath") >= 0) {
                     value = "<pre>";
 
-                    Object oClasspath = application.getAttribute(attribute);
-                    String classpath = oClasspath == null ? "" : oClasspath.toString();
+                    String classpath = rawValue == null ? "" : rawValue.toString();
                     String[] arrClasspath = classpath.split(System.getProperty("path.separator"));
                     for (int i = 0; i < arrClasspath.length; i++) {
                         value += arrClasspath[i] + System.getProperty("path.separator") + "\n";
                     }
                     value += "</pre>";
                 } else {
-                    value = "" + application.getAttribute(attribute);
+                    value = rawValue == null ? "" : rawValue.toString();
                 }
             } catch (Exception e) {
                 StringWriter sw = new StringWriter();
                 PrintWriter pw = new PrintWriter(sw);
                 e.printStackTrace(pw);
                 pw.close();
-                value = "<pre>" + sw + "</pre>";
+                value = "Exception formatting <code>" + rawValue.getClass() + "</code><br/><pre>" + sw + "</pre>";
             }
 
             out.println("<tr><td valign='top'>" + attribute + "</td><td>" + value + "</td></tr>");
