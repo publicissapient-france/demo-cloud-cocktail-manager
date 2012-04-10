@@ -243,7 +243,7 @@
                                 <artifactItem>
                                     <groupId>org.mortbay.jetty</groupId>
                                     <artifactId>jetty-runner</artifactId>
-                                    <version>8.1.2.v20120308</version>
+                                    <version>7.6.2.v20120308</version>
                                     <destFileName>jetty-runner.jar</destFileName>
                                 </artifactItem>
                             </artifactItems>
