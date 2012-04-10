@@ -30,7 +30,7 @@
       <property name="attributes">
          <map>
             <!-- system-property for tomcat and cloudbees ; environment-property for heroku -->
-             <entry key="cdnUrl" value="${cdn_url:''}" />
+             <entry key="cdnUrl" value="${cdn_url:}" />
          </map>
       </property>
    </bean>
