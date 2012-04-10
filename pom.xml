@@ -34,6 +34,7 @@
         <org.slf4j-version>1.6.4</org.slf4j-version>
 
         <m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
 
