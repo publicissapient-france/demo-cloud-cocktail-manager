@@ -144,7 +144,7 @@ public class CocktailRepository {
     protected SolrServer solrServer;
 
     @Inject
-    public CocktailRepository(@Value("${mongodb.uri}") String mongoUri, @Value("${solr.url}") String solrUri) throws UnknownHostException,
+    public CocktailRepository(@Value("${mongodb_uri}") String mongoUri, @Value("${solr_url}") String solrUri) throws UnknownHostException,
             MalformedURLException {
         MongoURI databaseUri = new MongoURI(mongoUri);
         mongo = new Mongo(databaseUri);

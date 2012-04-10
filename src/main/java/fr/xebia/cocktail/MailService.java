@@ -15,24 +15,17 @@
  */
 package fr.xebia.cocktail;
 
-import java.util.Properties;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.google.common.base.Strings;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.util.Properties;
 
 /**
  * Javamail based mailer.
@@ -51,11 +44,11 @@ public class MailService {
     @Inject
     public MailService(@Named("smtpProperties") Properties smtpProperties) throws MessagingException {
 
-        if (Strings.isNullOrEmpty(smtpProperties.getProperty("mail.username"))) {
+        if (Strings.isNullOrEmpty(smtpProperties.getProperty("mail_username"))) {
             mailSession = Session.getInstance(smtpProperties);
         } else {
-            final String username = smtpProperties.getProperty("mail.username");
-            final String password = smtpProperties.getProperty("mail.password");
+            final String username = smtpProperties.getProperty("mail_username");
+            final String password = smtpProperties.getProperty("mail_password");
 
             mailSession = Session.getInstance(smtpProperties, new Authenticator() {
                 @Override

@@ -25,8 +25,8 @@
    </appender>
 
    <appender name="SYSLOG" class="ch.qos.logback.classic.net.SyslogAppender">
-      <syslogHost>${papertrail.host}</syslogHost>
-      <port>${papertrail.port}</port>
+      <syslogHost>${papertrail_host}</syslogHost>
+      <port>${papertrail_port}</port>
       <facility>USER</facility>
       <suffixPattern>[%thread] %logger{36} - %msg %ex{0}</suffixPattern>
    </appender>

@@ -49,16 +49,16 @@ public class AmazonS3FileStorageService {
 
     private AmazonS3 amazonS3;
 
-    @Value("${aws.s3.bucketBaseUrl}")
+    @Value("${aws_s3_bucket_base_url}")
     private String amazonS3BucketBaseUrl;
 
-    @Value("${aws.s3.bucketName}")
+    @Value("${aws_s3_bucket_name}")
     private String amazonS3BucketName;
 
     private final Random random = new Random();
 
     @Inject
-    public AmazonS3FileStorageService(@Value("${aws.accessKey}") String awsAccessKey, @Value("${aws.secretKey}") String awsSecretKey) {
+    public AmazonS3FileStorageService(@Value("${aws_access_key}") String awsAccessKey, @Value("${aws_secret_key}") String awsSecretKey) {
 
         amazonS3 = new AmazonS3Client(new BasicAWSCredentials(awsAccessKey, awsSecretKey));
 

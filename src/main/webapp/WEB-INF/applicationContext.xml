@@ -20,8 +20,8 @@
    </sec:authentication-manager>
 
    <bean id="reCaptcha" class="net.tanesha.recaptcha.ReCaptchaImpl">
-      <property name="privateKey" value="${recaptcha.privateKey}" />
-      <property name="publicKey" value="${recaptcha.publicKey}" />
+      <property name="privateKey" value="${recaptcha_private_key}" />
+      <property name="publicKey" value="${recaptcha_public_key}" />
       <property name="includeNoscript" value="false" />
    </bean>
    
@@ -29,16 +29,11 @@
    <bean class="org.springframework.web.context.support.ServletContextAttributeExporter">
       <property name="attributes">
          <map>
-            <entry key="cdnUrl" value="#{ systemProperties['cdn.url'] == null ? '' : systemProperties['cdn.url'] }" />
+            <entry key="cdnUrl" value="#{ systemProperties['cdn_url'] == null ? '' : systemProperties['cdn_url'] }" />
          </map>
       </property>
    </bean>
 
-   <beans profile="default">
-      <context:property-placeholder location="classpath:environment-localhost.properties"
-         system-properties-mode="OVERRIDE" />
-   </beans>
-   <beans profile="prod">
-      <context:property-placeholder system-properties-mode="OVERRIDE" />
-   </beans>
+
+   <context:property-placeholder system-properties-mode="OVERRIDE" />
 </beans:beans>

@@ -32,6 +32,8 @@
       <org.springframework-version>3.1.1.RELEASE</org.springframework-version>
       <org.aspectj-version>1.6.12</org.aspectj-version>
       <org.slf4j-version>1.6.4</org.slf4j-version>
+      
+      <m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
    </properties>
    <dependencies>
 
@@ -222,6 +224,9 @@
             <groupId>com.cloudbees</groupId>
             <artifactId>bees-maven-plugin</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <configuration>
+                <appid>atelier-xebia/cocktail</appid>
+            </configuration>
          </plugin>
       </plugins>
    </build>

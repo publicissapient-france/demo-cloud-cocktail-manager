@@ -26,32 +26,32 @@
    <!-- AMAZON -->
    <!-- see http://aws.amazon.com/security-credentials -->
    <!-- xebia-cocktail amazon user -->
-   <param name="aws.accessKey" value="#AWS_ACCESS_KEY#" />
-   <param name="aws.secretKey" value="#AWS_SECRET_KEY#" />
-   <param name="aws.s3.bucketBaseUrl" value="http://xebia-cocktail.s3-website-us-east-1.amazonaws.com/" />
-   <param name="aws.s3.bucketName" value="xebia-cocktail" />
+   <param name="aws_access_key" value="#AWS_ACCESS_KEY#" />
+   <param name="aws_secret_key" value="#AWS_SECRET_KEY#" />
+   <param name="aws_s3_bucket_base_url" value="http://xebia-cocktail.s3-website-us-east-1.amazonaws.com/" />
+   <param name="aws_s3_bucket_name" value="xebia-cocktail" />
    
    <!-- CDN / CONTENT DELIVERY NETWORK -->
-   <param name="cdn.url" value="http://d1u3j4x9ltwfxi.cloudfront.net" />
+   <param name="cdn_url" value="http://d1u3j4x9ltwfxi.cloudfront.net" />
 
    <!-- MAIL -->
-   <param name="mail.smtp.host" value="smtp.sendgrid.net" />
-   <param name="mail.smtp.port" value="587" />
-   <param name="mail.username" value="#SENDGRID_USERNAME#" />
-   <param name="mail.password" value="#SENDGRID_PASSWORD#" />
+   <param name="mail_smtp_host" value="smtp.sendgrid.net" />
+   <param name="mail_smtp_port" value="587" />
+   <param name="mail_username" value="#SENDGRID_USERNAME#" />
+   <param name="mail_password" value="#SENDGRID_PASSWORD#" />
 
    <!-- MONGODB -->
-   <param name="mongodb.uri" value="mongodb://#MONGO_USERNAME#:#MONGO_PASSWORD#@boone.mongohq.com:10085/devoxxfr-demo" />
+   <param name="mongodb_uri" value="mongodb://#MONGO_USERNAME#:#MONGO_PASSWORD#@boone.mongohq.com:10085/devoxxfr-demo" />
 
    <!-- PAPERTRAIL -->
-   <param name="papertrail.host" value="logs.papertrailapp.com" />
-   <param name="papertrail.port" value="#PAPERTRAIL_PORT#" />
+   <param name="papertrail_host" value="logs.papertrailapp.com" />
+   <param name="papertrail_port" value="#PAPERTRAIL_PORT#" />
 
    <!-- RE CAPTCHA -->
-   <param name="recaptcha.publicKey" value="#RECAPTCHA_PUBLIC_KEY#" />
-   <param name="recaptcha.privateKey" value="#RECAPTCHA_PRIVATE_KEY#" />
+   <param name="recaptcha_public_key" value="#RECAPTCHA_PUBLIC_KEY#" />
+   <param name="recaptcha_private_key" value="#RECAPTCHA_PRIVATE_KEY#" />
 
    <!-- SOLR -->
-   <param name="solr.url" value="#SOLR_URL#" />
+   <param name="solr_url" value="#SOLR_URL#" />
 
 </config>
