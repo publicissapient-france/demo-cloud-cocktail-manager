@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
@@ -31,6 +32,9 @@ import net.tanesha.recaptcha.ReCaptchaResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jmx.export.annotation.ManagedMetric;
+import org.springframework.jmx.export.annotation.ManagedResource;
+import org.springframework.jmx.support.MetricType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -54,6 +58,7 @@ import com.google.common.collect.Lists;
  * 
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
+@ManagedResource("cocktail:type=CocktailManager,name=CocktailManager")
 @Controller
 public class CocktailManager {
 
@@ -71,6 +76,8 @@ public class CocktailManager {
     @Inject
     private ReCaptcha captcha;
 
+    private final AtomicInteger addedCommentCount = new AtomicInteger();
+
     @RequestMapping(value = "/cocktail/{id}/comment", method = RequestMethod.POST)
     public String addComment(@PathVariable String id, @RequestParam("comment") String comment, HttpServletRequest request) {
 
@@ -85,6 +92,7 @@ public class CocktailManager {
             logger.debug("Add comment: '{}' to {}", comment, cocktail);
             cocktail.getComments().addFirst(comment);
             cocktailRepository.update(cocktail);
+            addedCommentCount.incrementAndGet();
         } else {
             logger.warn("KO - wrong captcha: {}", response.getErrorMessage());
         }
@@ -176,9 +184,9 @@ public class CocktailManager {
     /**
      * TODO use PUT instead of POST
      * 
-     * @param id
-     * @param photo
-     * @return
+     * @param id id of the cocktail
+     * @param photo to associate with the cocktail
+     * @return redirection to display cocktail
      */
     @RequestMapping(value = "/cocktail/{id}/photo", method = RequestMethod.POST)
     public String updatePhoto(@PathVariable String id, @RequestParam("photo") MultipartFile photo) {
@@ -224,9 +232,14 @@ public class CocktailManager {
 
     @RequestMapping(method = RequestMethod.GET, value = "/cocktail")
     public ModelAndView find(@RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "ingredient", required = false) String ingredient, HttpServletRequest request) {
+            @RequestParam(value = "ingredient", required = false) String ingredient) {
 
         Collection<Cocktail> cocktails = cocktailRepository.find(ingredient, name);
         return new ModelAndView("cocktail/view-all", "cocktails", cocktails);
+    }
+
+    @ManagedMetric(metricType = MetricType.COUNTER)
+    public int getAddedCommentCount(){
+        return addedCommentCount.get();
     }
 }

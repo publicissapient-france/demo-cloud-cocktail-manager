@@ -35,6 +35,8 @@
 
    <context:component-scan base-package="fr.xebia.cocktail" />
 
+    <context:mbean-export/>
+
    <mvc:annotation-driven />
 
    <mvc:view-controller path="/" view-name="welcome" />

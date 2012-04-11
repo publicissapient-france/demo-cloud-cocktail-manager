@@ -18,6 +18,9 @@ package fr.xebia.cocktail;
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jmx.export.annotation.ManagedMetric;
+import org.springframework.jmx.export.annotation.ManagedResource;
+import org.springframework.jmx.support.MetricType;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -26,12 +29,14 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Javamail based mailer.
  * 
  * @author <a href="mailto:cleclerc@xebia.fr">Cyrille Le Clerc</a>
  */
+@ManagedResource("cocktail:type=MailService,name=MailService")
 @Service
 public class MailService {
 
@@ -42,6 +47,8 @@ public class MailService {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     protected InternetAddress fromAddress;
+
+    protected AtomicInteger sentEmailCounter = new AtomicInteger();
 
     @Inject
     public MailService(@Named("smtpProperties") Properties smtpProperties) throws MessagingException {
@@ -83,7 +90,12 @@ public class MailService {
 
         Transport.send(msg);
         auditLogger.info("Sent to {} cocktail '{}'", recipient, cocktail.getName());
+        sentEmailCounter.incrementAndGet();
+    }
 
+    @ManagedMetric(metricType = MetricType.COUNTER)
+    public int getSentEmailCount(){
+        return sentEmailCounter.get();
     }
 
 }
