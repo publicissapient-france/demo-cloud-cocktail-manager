@@ -46,7 +46,7 @@
         <div class="navbar-inner">
             <div class="container">
                 <a class="brand" href="${pageContext.request.contextPath}/"> <img alt='Devoxx France Logo' height='28'
-                    src='${pageContext.request.contextPath}/img/devoxx-france-logo.jpg' width='54' /> Cocktail Manager
+                    src='${pageContext.request.contextPath}/img/devoxx-france-logo.jpg' width='54' /> Devoxx Cocktails
                 </a>
                 <ul class="nav">
                     <li><a href="${pageContext.request.contextPath}/">Home</a></li>
